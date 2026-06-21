@@ -56,6 +56,8 @@ type GitHubContributionPayload = {
     issues: number
     openIssues: number
     closedIssues: number
+    totalPullRequests?: number
+    totalIssues?: number
   }
   pullRequests: GitHubContribution[]
   issues: GitHubContribution[]
@@ -300,13 +302,15 @@ function GitHubActivity() {
         {data.generatedAt && <span className="activity-updated">更新于 {formatDate(data.generatedAt)}</span>}
       </div>
       <div className="activity-summary">
+        <span><strong>{data.summary.pullRequests}</strong> total PRs</span>
         <span><strong>{data.summary.mergedPullRequests}</strong> merged PRs</span>
         <span><strong>{data.summary.openPullRequests}</strong> open PRs</span>
+        <span><strong>{data.summary.issues}</strong> total issues</span>
         <span><strong>{data.summary.openIssues}</strong> open issues</span>
       </div>
       <div className="activity-grid">
-        <ContributionList title="Pull Requests" items={data.pullRequests.slice(0, 6)} />
-        <ContributionList title="Issues" items={data.issues.slice(0, 6)} />
+        <ContributionList title="Pull Requests" items={data.pullRequests} />
+        <ContributionList title="Issues" items={data.issues} />
       </div>
     </section>
   )

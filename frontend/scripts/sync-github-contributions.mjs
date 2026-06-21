@@ -7,12 +7,13 @@ const outputPath = resolve(__dirname, '../public/github-contributions.json')
 const login = process.env.GITHUB_LOGIN || 'a-rookie-of-C-language'
 const token = process.env.GITHUB_TOKEN || process.env.GH_TOKEN
 
-async function githubSearch(type) {
+async function githubSearchPage(type, page) {
   const params = new URLSearchParams({
     q: `author:${login} type:${type}`,
     sort: 'updated',
     order: 'desc',
-    per_page: '12',
+    per_page: '100',
+    page: String(page),
   })
   const response = await fetch(`https://api.github.com/search/issues?${params}`, {
     headers: {
@@ -25,6 +26,18 @@ async function githubSearch(type) {
     throw new Error(`GitHub search failed for ${type}: ${response.status} ${await response.text()}`)
   }
   return response.json()
+}
+
+async function githubSearchAll(type) {
+  const items = []
+  let totalCount = 0
+  for (let page = 1; page <= 10; page += 1) {
+    const result = await githubSearchPage(type, page)
+    totalCount = result.total_count
+    items.push(...result.items)
+    if (items.length >= result.total_count || result.items.length === 0) break
+  }
+  return { totalCount, items }
 }
 
 function mapItem(item, type) {
@@ -46,8 +59,8 @@ function mapItem(item, type) {
 }
 
 const [pullRequestResult, issueResult] = await Promise.all([
-  githubSearch('pr'),
-  githubSearch('issue'),
+  githubSearchAll('pr'),
+  githubSearchAll('issue'),
 ])
 
 const pullRequests = pullRequestResult.items.map((item) => mapItem(item, 'pr'))
@@ -62,6 +75,8 @@ const payload = {
     issues: issues.length,
     openIssues: issues.filter((item) => item.state === 'open').length,
     closedIssues: issues.filter((item) => item.state === 'closed').length,
+    totalPullRequests: pullRequestResult.totalCount,
+    totalIssues: issueResult.totalCount,
   },
   pullRequests,
   issues,
