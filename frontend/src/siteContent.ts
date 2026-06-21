@@ -139,6 +139,15 @@ export const curatedProjects: Project[] = [
   },
   {
     id: 8,
+    name: 'rubash',
+    description: '使用 Rust 从零重写 GNU Bash 的 POSIX 兼容 Shell，覆盖词法分析、AST 解析、内建命令、重定向执行和 GNU Bash upstream 测试 runner。',
+    url: '',
+    repoUrl: 'https://github.com/unixwin/rubash',
+    techStack: 'Rust, Shell, Bash, Parser, Executor, POSIX',
+    featured: true,
+  },
+  {
+    id: 9,
     name: 'Agentic RAG Tool System',
     description: '面向 Agent 调用的 RAG 工具系统，拆分 DAO、Service、Tool Schema、Runtime 和 Controller。',
     url: '',
@@ -147,7 +156,7 @@ export const curatedProjects: Project[] = [
     featured: true,
   },
   {
-    id: 9,
+    id: 10,
     name: 'arookieofcOS',
     description: 'Tauri 桌面环境实验，用 React UI 和 Rust 命令桥接系统信息、文件、终端和监控能力。',
     url: '',
@@ -156,7 +165,7 @@ export const curatedProjects: Project[] = [
     featured: false,
   },
   {
-    id: 10,
+    id: 11,
     name: 'arookieofcMQ',
     description: 'Rust 消息队列实现练习，围绕生产消费、FIFO 队列、持久化和消息处理器抽象展开。',
     url: '',
@@ -165,7 +174,7 @@ export const curatedProjects: Project[] = [
     featured: false,
   },
   {
-    id: 11,
+    id: 12,
     name: 'Advisor AI Platform',
     description: '全栈智能顾问平台，把前端、业务后端、RAG Agent 服务、向量检索和认证链路组合成完整系统。',
     url: '',
@@ -197,6 +206,9 @@ export const projectEvidence: Record<string, { label: string; url: string }[]> =
   ],
   WinSH: [
     { label: 'GitHub repository', url: 'https://github.com/a-rookie-of-C-language/WinSH' },
+  ],
+  rubash: [
+    { label: 'GitHub repository', url: 'https://github.com/unixwin/rubash' },
   ],
   'Agentic RAG Tool System': [
     { label: 'GitHub profile', url: 'https://github.com/a-rookie-of-C-language' },
@@ -279,6 +291,14 @@ export const projectCaseCopy: Record<string, ProjectCaseCopy> = {
     impact: '体现解析器、交互式 CLI 和插件化架构设计能力。',
     architecture: ['交互式终端', '命令解析器', '补全/主题系统', '执行运行时', '插件扩展'],
     dataFlow: ['用户输入命令', '词法/语法解析', '展开变量与通配符', '执行内置或外部命令', '渲染结果和提示符'],
+  },
+  rubash: {
+    focus: 'Rust 重写 GNU Bash',
+    challenge: 'Shell 兼容性牵涉词法、语法、展开、重定向、内建命令和上游行为差异，手写实现很容易在边界场景失真。',
+    solution: '用 Rust 拆分 lexer、parser、executor 和 builtins，并引入 GNU Bash upstream runner 追踪兼容性基线。',
+    impact: '展示系统软件、解释器/解析器、CLI 执行模型和测试驱动兼容性工程能力。',
+    architecture: ['CLI 入口', 'Lexer', 'Parser / AST', 'Executor', 'Builtins / 外部命令'],
+    dataFlow: ['用户输入命令', '词法分析生成 token', '解析为 AST', '执行重定向和内建/外部命令', '返回退出码和输出'],
   },
   AIGateway: {
     focus: '模型网关与流量治理',
