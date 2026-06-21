@@ -63,6 +63,13 @@ type GitHubContributionPayload = {
   issues: GitHubContribution[]
 }
 
+type RepositoryActivity = {
+  repository: string
+  pullRequests: GitHubContribution[]
+  issues: GitHubContribution[]
+  updatedAt: string
+}
+
 function App() {
   return (
     <BrowserRouter basename={routerBasename}>
@@ -276,6 +283,7 @@ function Home() {
 
 function GitHubActivity() {
   const [data, setData] = useState<GitHubContributionPayload | null>(null)
+  const repositories = useMemo(() => data ? groupByRepository(data) : [], [data])
 
   useEffect(() => {
     let cancelled = false
@@ -307,10 +315,23 @@ function GitHubActivity() {
         <span><strong>{data.summary.openPullRequests}</strong> open PRs</span>
         <span><strong>{data.summary.issues}</strong> total issues</span>
         <span><strong>{data.summary.openIssues}</strong> open issues</span>
+        <span><strong>{repositories.length}</strong> repos</span>
       </div>
-      <div className="activity-grid">
-        <ContributionList title="Pull Requests" items={data.pullRequests} />
-        <ContributionList title="Issues" items={data.issues} />
+      <div className="repository-activity-list">
+        {repositories.map((repository, index) => (
+          <details className="repository-activity" open={index < 3} key={repository.repository}>
+            <summary>
+              <span>{repository.repository}</span>
+              <small>
+                {repository.pullRequests.length} PRs · {repository.issues.length} issues · 更新于 {formatDate(repository.updatedAt)}
+              </small>
+            </summary>
+            <div className="repo-contribution-grid">
+              <ContributionList title={`Pull Requests (${repository.pullRequests.length})`} items={repository.pullRequests} />
+              <ContributionList title={`Issues (${repository.issues.length})`} items={repository.issues} />
+            </div>
+          </details>
+        ))}
       </div>
     </section>
   )
@@ -321,6 +342,7 @@ function ContributionList({ title, items }: { title: string; items: GitHubContri
     <section className="contribution-panel">
       <h3>{title}</h3>
       <div className="contribution-list">
+        {items.length === 0 && <span className="contribution-empty">暂无记录</span>}
         {items.map((item) => (
           <a href={item.url} target="_blank" className="contribution-item" key={item.url}>
             <span className={`contribution-state ${item.state}`}>{stateLabel(item.state)}</span>
@@ -331,6 +353,23 @@ function ContributionList({ title, items }: { title: string; items: GitHubContri
       </div>
     </section>
   )
+}
+
+function groupByRepository(data: GitHubContributionPayload): RepositoryActivity[] {
+  const grouped = new Map<string, RepositoryActivity>()
+  for (const item of [...data.pullRequests, ...data.issues]) {
+    const current = grouped.get(item.repository) || {
+      repository: item.repository,
+      pullRequests: [],
+      issues: [],
+      updatedAt: item.updatedAt,
+    }
+    if (item.kind === 'pull_request') current.pullRequests.push(item)
+    else current.issues.push(item)
+    if (new Date(item.updatedAt) > new Date(current.updatedAt)) current.updatedAt = item.updatedAt
+    grouped.set(item.repository, current)
+  }
+  return [...grouped.values()].sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime())
 }
 
 function stateLabel(state: GitHubContribution['state']) {
