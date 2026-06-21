@@ -159,7 +159,7 @@ export const curatedProjects: Project[] = [
     id: 8,
     name: 'rubash',
     description: '使用 Rust 从零重写 GNU Bash 的 POSIX 兼容 Shell，覆盖词法分析、AST 解析、内建命令、重定向执行和 GNU Bash upstream 测试 runner。',
-    url: '',
+    url: 'https://crates.io/crates/rubash',
     repoUrl: 'https://github.com/unixwin/rubash',
     techStack: 'Rust, Shell, Bash, Parser, Executor, POSIX',
     featured: true,
@@ -226,6 +226,7 @@ export const projectEvidence: Record<string, { label: string; url: string }[]> =
     { label: 'GitHub repository', url: 'https://github.com/a-rookie-of-C-language/WinSH' },
   ],
   rubash: [
+    { label: 'crates.io package', url: 'https://crates.io/crates/rubash' },
     { label: 'GitHub repository', url: 'https://github.com/unixwin/rubash' },
   ],
   'Agentic RAG Tool System': [
