@@ -148,10 +148,10 @@ export const curatedProjects: Project[] = [
   },
   {
     id: 7,
-    name: 'WinSH',
+    name: 'WinuxSH',
     description: 'Rust Windows Shell 实验，覆盖命令解析、补全、脚本、主题和插件化扩展。',
     url: '',
-    repoUrl: 'https://github.com/a-rookie-of-C-language/WinSH',
+    repoUrl: 'https://github.com/a-rookie-of-C-language/WinuxSH',
     techStack: 'Rust, Shell, Parser, Plugin, Windows',
     featured: true,
   },
@@ -222,7 +222,7 @@ export const projectEvidence: Record<string, { label: string; url: string }[]> =
   WinuxCmd: [
     { label: 'GitHub repository', url: 'https://github.com/a-rookie-of-C-language/WinuxCmd' },
   ],
-  WinSH: [
+  WinuxSH: [
     { label: 'GitHub repository', url: 'https://github.com/a-rookie-of-C-language/WinSH' },
   ],
   rubash: [
