@@ -156,6 +156,24 @@
   max-width: 760px;
 }
 
+.membership-line {
+  color: #52525b;
+  font-size: 16px;
+  line-height: 1.7;
+  margin: 12px 0 0;
+}
+
+.membership-line a {
+  color: #2563eb;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.membership-line a:hover,
+.membership-line a:focus-visible {
+  text-decoration: underline;
+}
+
 .hero-actions,
 .button-row,
 .meta-row,
@@ -527,6 +545,16 @@
 .resume-card strong {
   font-family: "Fira Code", monospace;
   line-height: 1.5;
+}
+
+.resume-card .membership-line {
+  color: #d4d4d8;
+  font-size: 14px;
+  margin: 0;
+}
+
+.resume-card .membership-line a {
+  color: #93c5fd;
 }
 
 .resume-section {

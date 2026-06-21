@@ -3,6 +3,12 @@ import type { Post, Profile, Project, SitePayload } from './types'
 
 export const GITHUB_URL = 'https://github.com/a-rookie-of-C-language'
 
+export const organizationMemberships = [
+  { label: '@ai-cqut', url: 'https://github.com/ai-cqut' },
+  { label: '@unixwin', url: 'https://github.com/unixwin' },
+  { label: '@EfficiencAI', url: 'https://github.com/EfficiencAI' },
+]
+
 export const emptyProfile: Profile = {
   displayName: 'a-rookie-of-C-language',
   headline: '全栈工程师，专注 AI Agent 系统与后端基础设施。',

@@ -17,6 +17,7 @@ import {
   deploymentNotes,
   emptyProfile,
   focusCards,
+  organizationMemberships,
   projectCaseFor,
   projectEvidence,
   projectSlug,
@@ -81,6 +82,15 @@ function Home() {
           <h1>{profile.displayName}</h1>
           <p className="headline">{profile.headline}</p>
           <p className="bio">{profile.bio}</p>
+          <p className="membership-line">
+            member of{' '}
+            {organizationMemberships.map((org, index) => (
+              <span key={org.url}>
+                <a href={org.url} target="_blank">{org.label}</a>
+                {index < organizationMemberships.length - 1 ? ', ' : ''}
+              </span>
+            ))}
+          </p>
           <div className="hero-actions">
             <a className="primary-btn" href={GITHUB_URL} target="_blank"><GitBranch size={18} /> GitHub 主页</a>
             <Link className="secondary-btn" to="/resume"><FileText size={18} /> 在线简历</Link>
@@ -232,6 +242,15 @@ function ResumePage() {
           {profile.avatarUrl && <img src={profile.avatarUrl} alt={`${profile.displayName} 的头像`} />}
           <span>全栈 / AI Agent / 后端基础设施</span>
           <strong>Java Spring · Rust · TypeScript · C++</strong>
+          <p className="membership-line compact">
+            member of{' '}
+            {organizationMemberships.map((org, index) => (
+              <span key={org.url}>
+                <a href={org.url} target="_blank">{org.label}</a>
+                {index < organizationMemberships.length - 1 ? ', ' : ''}
+              </span>
+            ))}
+          </p>
         </aside>
       </section>
 
