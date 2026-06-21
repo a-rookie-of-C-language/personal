@@ -25,7 +25,7 @@ npm run build
 
 将 `frontend/dist` 作为静态站点部署即可，例如 Nginx、Vercel、Netlify、GitHub Pages 或任意静态文件服务。
 
-如果部署在子路径，需要同步调整 Vite 的 `base` 配置。
+当前 GitHub Pages 使用自定义域名 `arookieofc.site`，Vite `base` 保持 `/`。
 
 ## 已实现
 
