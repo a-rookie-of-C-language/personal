@@ -515,6 +515,120 @@
   margin: 0 0 18px;
 }
 
+.github-activity-band {
+  padding-top: 30px;
+}
+
+.activity-updated {
+  color: #71717a;
+  font-family: "Fira Code", monospace;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.activity-summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.activity-summary span {
+  background: #ffffff;
+  border: 1px solid #e4e4e7;
+  border-radius: 8px;
+  color: #52525b;
+  font-size: 14px;
+  padding: 10px 12px;
+}
+
+.activity-summary strong {
+  color: #09090b;
+  font-family: "Fira Code", monospace;
+  font-size: 18px;
+  margin-right: 6px;
+}
+
+.activity-grid {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.contribution-panel {
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid #e4e4e7;
+  border-radius: 8px;
+  box-shadow: 0 14px 36px rgba(24, 24, 27, 0.06);
+  padding: 20px;
+}
+
+.contribution-panel h3 {
+  color: #09090b;
+  font-family: "Fira Code", monospace;
+  font-size: 21px;
+  margin: 0 0 14px;
+}
+
+.contribution-list {
+  display: grid;
+  gap: 10px;
+}
+
+.contribution-item {
+  border: 1px solid #e4e4e7;
+  border-radius: 8px;
+  color: inherit;
+  display: grid;
+  gap: 8px;
+  padding: 13px;
+  text-decoration: none;
+  transition: border-color 180ms ease, background-color 180ms ease;
+}
+
+.contribution-item:hover,
+.contribution-item:focus-visible {
+  background: #fafafa;
+  border-color: #93c5fd;
+  outline: 2px solid transparent;
+}
+
+.contribution-item strong {
+  color: #18181b;
+  line-height: 1.45;
+}
+
+.contribution-item small {
+  color: #71717a;
+  font-family: "Fira Code", monospace;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.contribution-state {
+  border-radius: 999px;
+  font-family: "Fira Code", monospace;
+  font-size: 11px;
+  font-weight: 800;
+  justify-self: start;
+  padding: 3px 8px;
+}
+
+.contribution-state.open {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.contribution-state.merged {
+  background: #f3e8ff;
+  color: #6b21a8;
+}
+
+.contribution-state.closed {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
 .article-page {
   padding-top: 128px;
 }
@@ -1252,7 +1366,8 @@ button,
   .resume-skill-grid,
   .timeline-list,
   .case-grid,
-  .deployment-panel {
+  .deployment-panel,
+  .activity-grid {
     grid-template-columns: 1fr;
   }
 

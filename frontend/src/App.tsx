@@ -1,4 +1,4 @@
-import { useDeferredValue, useMemo, useState } from 'react'
+import { useDeferredValue, useEffect, useMemo, useState } from 'react'
 import { BrowserRouter, Link, Outlet, Route, Routes, useParams } from 'react-router-dom'
 import {
   ArrowLeft,
@@ -32,6 +32,34 @@ import type { Post } from './types'
 import './App.css'
 
 const routerBasename = import.meta.env.BASE_URL.replace(/\/$/, '') || '/'
+
+type GitHubContribution = {
+  kind: 'pull_request' | 'issue'
+  title: string
+  url: string
+  repository: string
+  number: number
+  state: 'open' | 'closed' | 'merged'
+  createdAt: string
+  updatedAt: string
+  closedAt: string | null
+  mergedAt: string | null
+}
+
+type GitHubContributionPayload = {
+  login: string
+  generatedAt: string | null
+  summary: {
+    pullRequests: number
+    mergedPullRequests: number
+    openPullRequests: number
+    issues: number
+    openIssues: number
+    closedIssues: number
+  }
+  pullRequests: GitHubContribution[]
+  issues: GitHubContribution[]
+}
 
 function App() {
   return (
@@ -201,6 +229,8 @@ function Home() {
         </div>
       </section>
 
+      <GitHubActivity />
+
       <section className="content-band">
         <div className="section-head">
           <div>
@@ -240,6 +270,73 @@ function Home() {
       </section>
     </main>
   )
+}
+
+function GitHubActivity() {
+  const [data, setData] = useState<GitHubContributionPayload | null>(null)
+
+  useEffect(() => {
+    let cancelled = false
+    fetch(`${import.meta.env.BASE_URL}github-contributions.json`, { cache: 'no-store' })
+      .then((response) => response.ok ? response.json() : null)
+      .then((payload: GitHubContributionPayload | null) => {
+        if (!cancelled) setData(payload)
+      })
+      .catch(() => {
+        if (!cancelled) setData(null)
+      })
+    return () => { cancelled = true }
+  }, [])
+
+  if (!data || (!data.pullRequests.length && !data.issues.length)) return null
+
+  return (
+    <section className="content-band github-activity-band">
+      <div className="section-head">
+        <div>
+          <p className="eyebrow">GitHub Activity</p>
+          <h2>公开协作记录</h2>
+        </div>
+        {data.generatedAt && <span className="activity-updated">更新于 {formatDate(data.generatedAt)}</span>}
+      </div>
+      <div className="activity-summary">
+        <span><strong>{data.summary.mergedPullRequests}</strong> merged PRs</span>
+        <span><strong>{data.summary.openPullRequests}</strong> open PRs</span>
+        <span><strong>{data.summary.openIssues}</strong> open issues</span>
+      </div>
+      <div className="activity-grid">
+        <ContributionList title="Pull Requests" items={data.pullRequests.slice(0, 6)} />
+        <ContributionList title="Issues" items={data.issues.slice(0, 6)} />
+      </div>
+    </section>
+  )
+}
+
+function ContributionList({ title, items }: { title: string; items: GitHubContribution[] }) {
+  return (
+    <section className="contribution-panel">
+      <h3>{title}</h3>
+      <div className="contribution-list">
+        {items.map((item) => (
+          <a href={item.url} target="_blank" className="contribution-item" key={item.url}>
+            <span className={`contribution-state ${item.state}`}>{stateLabel(item.state)}</span>
+            <strong>{item.title}</strong>
+            <small>{item.repository} #{item.number} · {formatDate(item.updatedAt)}</small>
+          </a>
+        ))}
+      </div>
+    </section>
+  )
+}
+
+function stateLabel(state: GitHubContribution['state']) {
+  if (state === 'merged') return 'merged'
+  if (state === 'closed') return 'closed'
+  return 'open'
+}
+
+function formatDate(value: string) {
+  return new Intl.DateTimeFormat('zh-CN', { month: '2-digit', day: '2-digit' }).format(new Date(value))
 }
 
 function ResumePage() {
