@@ -30,9 +30,11 @@ import {
 import type { Post } from './types'
 import './App.css'
 
+const routerBasename = import.meta.env.BASE_URL.replace(/\/$/, '') || '/'
+
 function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename={routerBasename}>
       <Routes>
         <Route path="/" element={<PublicLayout />}>
           <Route index element={<Home />} />
