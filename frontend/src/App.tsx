@@ -135,6 +135,27 @@ function Home() {
         </div>
       </section>
 
+      <section className="content-band organization-band">
+        <div className="section-head">
+          <div>
+            <p className="eyebrow">Organizations</p>
+            <h2>参与的工程组织</h2>
+          </div>
+        </div>
+        <div className="organization-grid">
+          {organizationMemberships.map((org) => (
+            <a className="organization-card" href={org.url} target="_blank" key={org.url}>
+              <span>{org.label}</span>
+              <h3>{org.name}</h3>
+              <p>{org.description}</p>
+              <div className="tag-row">
+                {org.focus.map((item) => <span key={item}>{item}</span>)}
+              </div>
+            </a>
+          ))}
+        </div>
+      </section>
+
       <section className="content-band identity-band">
         <div className="section-head">
           <div>

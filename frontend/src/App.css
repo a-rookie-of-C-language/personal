@@ -350,7 +350,8 @@
 }
 
 .post-grid,
-.project-grid {
+.project-grid,
+.organization-grid {
   display: grid;
   gap: 16px;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -358,6 +359,7 @@
 
 .post-card,
 .project-card,
+.organization-card,
 .editor-panel,
 .login-panel,
 .empty-state {
@@ -471,6 +473,46 @@
   color: #71717a;
   display: block;
   margin-top: 12px;
+}
+
+.organization-band {
+  padding-top: 26px;
+}
+
+.organization-card {
+  color: inherit;
+  min-height: 230px;
+  padding: 22px;
+  text-decoration: none;
+  transition: border-color 180ms ease, box-shadow 180ms ease, transform 180ms ease;
+}
+
+.organization-card:hover,
+.organization-card:focus-visible {
+  border-color: #c084fc;
+  box-shadow: 0 20px 44px rgba(126, 34, 206, 0.1);
+  outline: 2px solid transparent;
+  transform: translateY(-2px);
+}
+
+.organization-card > span {
+  color: #7c3aed;
+  font-family: "Fira Code", monospace;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.organization-card h3 {
+  color: #09090b;
+  font-family: "Fira Code", monospace;
+  font-size: 24px;
+  margin: 18px 0 12px;
+}
+
+.organization-card p {
+  color: #52525b;
+  line-height: 1.7;
+  margin: 0 0 18px;
 }
 
 .article-page {
@@ -1489,7 +1531,8 @@ button,
 
 @media (max-width: 920px) {
   .skill-matrix,
-  .agent-grid {
+  .agent-grid,
+  .organization-grid {
     grid-template-columns: 1fr;
   }
 

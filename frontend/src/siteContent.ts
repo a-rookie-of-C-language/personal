@@ -4,9 +4,27 @@ import type { Post, Profile, Project, SitePayload } from './types'
 export const GITHUB_URL = 'https://github.com/a-rookie-of-C-language'
 
 export const organizationMemberships = [
-  { label: '@ai-cqut', url: 'https://github.com/ai-cqut' },
-  { label: '@unixwin', url: 'https://github.com/unixwin' },
-  { label: '@EfficiencAI', url: 'https://github.com/EfficiencAI' },
+  {
+    label: '@ai-cqut',
+    name: 'ai-cqut',
+    url: 'https://github.com/ai-cqut',
+    description: '重庆理工大学两江人工智能学院 GitHub 官方组织。',
+    focus: ['学院工程', 'AI 平台', '校园系统'],
+  },
+  {
+    label: '@unixwin',
+    name: 'unixwin',
+    url: 'https://github.com/unixwin',
+    description: '面向 Windows 的 Unix 风格工具链组织，维护 Shell、命令行工具等，持续提升 Windows 下的终端体验。',
+    focus: ['Windows CLI', 'Shell', 'Unix-style Tools'],
+  },
+  {
+    label: '@EfficiencAI',
+    name: 'EfficiencAI',
+    url: 'https://github.com/EfficiencAI',
+    description: '围绕 AI 效率、智能学习和工作流辅助的工程组织，探索对话树、MCP 与 AI 应用平台。',
+    focus: ['AI Efficiency', 'MCP', 'Learning Tools'],
+  },
 ]
 
 export const emptyProfile: Profile = {
