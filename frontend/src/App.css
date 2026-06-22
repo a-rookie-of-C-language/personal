@@ -52,7 +52,7 @@
   text-decoration: none;
 }
 
-.brand span {
+.brand-avatar {
   background: #18181b;
   border-radius: 6px;
   color: #ffffff;
@@ -61,7 +61,24 @@
   font-size: 13px;
   height: 32px;
   place-items: center;
+  overflow: hidden;
+  position: relative;
   width: 32px;
+}
+
+.brand-avatar img {
+  display: block;
+  height: 100%;
+  object-fit: cover;
+  position: relative;
+  width: 100%;
+  z-index: 1;
+}
+
+.brand-avatar span {
+  inset: 0;
+  position: absolute;
+  z-index: 0;
 }
 
 .topbar nav {
@@ -1467,7 +1484,7 @@ button,
     font-size: 0;
   }
 
-  .brand span {
+  .brand-avatar {
     font-size: 13px;
   }
 

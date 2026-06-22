@@ -91,7 +91,7 @@ function PublicLayout() {
     <div className="site-shell">
       <a className="skip-link" href="#main">跳到主要内容</a>
       <header className="topbar">
-        <Link to="/" className="brand"><span>AR</span> arookieofc</Link>
+        <Link to="/" className="brand"><BrandAvatar /> arookieofc</Link>
         <nav>
           <Link to="/">首页</Link>
           <Link to="/resume">简历</Link>
@@ -101,6 +101,15 @@ function PublicLayout() {
       </header>
       <Outlet />
     </div>
+  )
+}
+
+function BrandAvatar() {
+  return (
+    <span className="brand-avatar">
+      <img src={emptyProfile.avatarUrl} alt="" />
+      <span>AR</span>
+    </span>
   )
 }
 
