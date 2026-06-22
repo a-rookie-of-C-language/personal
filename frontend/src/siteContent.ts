@@ -28,10 +28,10 @@ export const organizationMemberships = [
 ]
 
 export const emptyProfile: Profile = {
-  displayName: 'a-rookie-of-C-language',
+  displayName: 'arookieofc',
   headline: '全栈工程师，专注 AI Agent 系统与后端基础设施。',
   bio: '我长期折腾 Java Spring、Rust、TypeScript 和 C++，关注能真正落地的系统：Agent 工作流、Web 平台、后端服务与开发者工具。',
-  avatarUrl: '',
+  avatarUrl: '/avatar.jpg',
   location: 'China',
   email: '',
 }
