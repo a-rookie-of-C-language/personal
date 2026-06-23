@@ -536,10 +536,11 @@ function ProjectDetail() {
           <p>{copy.impact}</p>
         </article>
       </section>
-      {(copy.highlights?.length || copy.details?.length) && (
+      {(copy.highlights?.length || copy.details?.length || copy.decisions?.length) && (
         <section className="project-insight-grid">
           {copy.highlights?.length ? <ProjectList title="关键看点" items={copy.highlights} /> : null}
           {copy.details?.length ? <ProjectList title="工程细节" items={copy.details} /> : null}
+          {copy.decisions?.length ? <ProjectList title="工程决策" items={copy.decisions} /> : null}
         </section>
       )}
       <section className="diagram-section">

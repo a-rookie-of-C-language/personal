@@ -260,58 +260,71 @@ export type ProjectCaseCopy = {
   impact: string
   highlights?: string[]
   details?: string[]
+  decisions?: string[]
   architecture?: string[]
   dataFlow?: string[]
 }
 
-export const projectCaseEnhancements: Record<string, Pick<ProjectCaseCopy, 'highlights' | 'details'>> = {
+export const projectCaseEnhancements: Record<string, Pick<ProjectCaseCopy, 'highlights' | 'details' | 'decisions'>> = {
   'Personal Blog Studio': {
     highlights: ['纯前端静态部署', 'GitHub Pages 自动发布', '构建时同步 GitHub 活动数据'],
     details: ['使用 Vite base 适配自定义域名根路径。', '通过 GitHub Actions 构建前生成贡献数据 JSON。', '将项目案例、组织信息和公开协作记录统一为静态内容。'],
+    decisions: ['选择纯静态站，减少后端和数据库运维负担。', '构建时同步 GitHub 数据，避免前端暴露 token。', '用自定义域名根路径部署，Vite base 固定为 /。'],
   },
   'rust-spring': {
     highlights: ['注解式 IoC', 'Spring Boot 风格启动器', '配置注入与组件注册'],
     details: ['用过程宏表达 Component、Bean、Value 等 Spring 语义。', '以容器注册和依赖注入组织服务启动链路。', '保留 Rust 类型系统和编译期约束下的框架实验价值。'],
+    decisions: ['用过程宏表达 Spring 注解语义，而不是运行时字符串配置。', '保留 IoC 体验，同时让依赖关系受 Rust 类型系统约束。', '先实现核心容器、配置和路由，再扩展生态模块。'],
   },
   AIGateway: {
     highlights: ['多租户 API Key', '流式聊天端点', 'DDD 分层网关'],
     details: ['公开 health、chat completions 和 SSE stream 入口。', '以 domain/application/infrastructure/interfaces 划分依赖方向。', '围绕 Provider 路由、限流、配额和鉴权拆分边界。'],
+    decisions: ['用 DDD 分层隔离鉴权、限流、Provider 和 HTTP 边界。', '保留 OpenAI 兼容接口，降低客户端迁移成本。', '流式响应使用 SSE，便于调试和浏览器/CLI 消费。'],
   },
   ferryllm: {
     highlights: ['桌面优先 LLM Gateway', '多客户端启动器', '统一 Provider 配置'],
     details: ['GUI 与 CLI 共享 Rust gateway core。', '面向 Codex、Claude Code、OpenCode、VS Code 等客户端注入运行环境。', '保留 OpenAI/Anthropic/OpenAI-compatible 后端的协议适配空间。'],
+    decisions: ['GUI 作为主工作流，CLI 只是同一核心能力的薄壳。', '模型名映射与 Provider 配置集中管理，减少客户端重复配置。', '本地 gateway 负责协议归一，客户端只关心统一入口。'],
   },
   cxxmcp: {
     highlights: ['C++17 MCP SDK', 'JSON-RPC 建模', '高覆盖协议一致性'],
     details: ['README 展示 server/client conformance 证据。', '通过 CMake 和 release gates 组织跨平台发布质量。', '实现面向工具、客户端和服务端的 MCP 基础模型。'],
+    decisions: ['用 C++17 保持 SDK 可集成性和较低工具链门槛。', '围绕 JSON-RPC 建模协议对象，避免松散字符串处理。', '用 conformance evidence 和 release gates 约束协议兼容性。'],
   },
   WinuxCmd: {
     highlights: ['GNU-style Windows 命令', 'PowerShell/cmd 兼容', '轻量原生工具集'],
     details: ['面向没有 WSL/VM 的 Windows 自动化环境。', '将 Linux 风格 one-liner 带到 PowerShell、cmd 和 Windows Terminal。', '关注 AI sandbox、CI 日志和日常管道组合中的命令可用性。'],
+    decisions: ['选择原生 Windows 实现，而不是依赖 WSL/VM。', '优先覆盖 AI/文档/CI 常见 Linux 风格 one-liner。', '保持轻量可分发，适配 PowerShell 5.1 等保守环境。'],
   },
   WinuxSH: {
     highlights: ['860+ 命令补全', '通配符和命令替换', '主题与插件架构'],
     details: ['使用 Rust 实现现代 Unix-style Windows shell。', '支持 .sh 脚本、历史记录、数组系统和 PATH 命令发现。', '与 WinuxCmd 形成 Windows 终端体验的工具链组合。'],
+    decisions: ['Shell 作为长期体验入口，补全/主题/插件先行。', '把 PATH 自动发现和配置补全结合，降低 Windows 终端摩擦。', '与 WinuxCmd 分工：Shell 负责交互，命令集负责工具能力。'],
   },
   rubash: {
     highlights: ['GNU Bash Rust 重写', '上游 Bash 测试 runner', 'crates.io 发布'],
     details: ['当前 alpha 阶段，重点覆盖 lexer、parser、executor 和 builtins。', '通过隔离 workdir/HOME/TMPDIR 的 upstream runner 追踪兼容性。', '以 TDD 方式逐步补齐变量展开、控制流、管道和作业控制。'],
+    decisions: ['从 lexer/parser/executor 分层重写 Bash，降低兼容性调试复杂度。', '以 upstream Bash tests 作为行为基线，而不是只依赖自写样例。', 'alpha 阶段明确不承诺生产可用，优先推进核心语法覆盖。'],
   },
   'Agentic RAG Tool System': {
     highlights: ['RAG 工具化', 'MCP/CLI 入口', 'DAO-Service-Runtime 分层'],
     details: ['把检索增强能力封装成 Agent 可调用工具。', '通过 Tool Schema 明确输入输出契约。', '面向可组合工作流而不是单次问答组织运行时。'],
+    decisions: ['把 RAG 封装为工具接口，服务 Agent 调用而非只做聊天页面。', 'Tool Schema 先定义契约，再实现 Runtime 和 DAO。', 'CLI/MCP 双入口方便本地调试和 Agent 集成。'],
   },
   arookieofcOS: {
     highlights: ['Tauri 桌面实验', 'React + Rust IPC', '系统面板与命令桥'],
     details: ['用前端 UI 承载桌面交互，用 Rust command 处理系统能力。', '关注文件、终端、监控和系统信息的统一入口。', '体现桌面端工程与系统集成的探索。'],
+    decisions: ['Tauri 负责系统桥接，React 负责桌面交互层。', '系统命令集中在 Rust command 层，避免 UI 直接处理平台细节。', '先做系统信息/文件/终端等可演示模块，再扩展桌面环境。'],
   },
   arookieofcMQ: {
     highlights: ['RocketMQ 学习路线', 'FIFO 队列', '生产者消费者模型'],
     details: ['README 采用阶段化路线，从简单队列推进到持久化和 Broker 架构。', '当前重点是消息定义、队列 trait 和基础队列实现。', '用于拆解消息中间件的核心语义和演进过程。'],
+    decisions: ['采用阶段化学习路线，不一开始追求完整 RocketMQ。', '先抽象 MessageQueue trait，再逐步替换存储和 Broker 实现。', '用文档路线图记录中间件能力的演进边界。'],
   },
   'Advisor AI Platform': {
     highlights: ['React + Spring Boot + Python Agent', 'PostgreSQL / pgvector', '聊天链路联调脚本'],
     details: ['前端、后端 API 和 Agent 服务分离部署与联调。', '后端负责业务鉴权和编排，Agent 负责 RAG 索引与检索。', 'README 提供 auth/smoke 脚本验证聊天主链路。'],
+    decisions: ['前端、业务后端、Agent 服务三段拆分，便于独立调试。', 'PostgreSQL/pgvector 存储知识索引，Agent 负责检索增强。', '内置 e2e drill 脚本验证认证、非流式和流式聊天链路。'],
   },
 }
 
