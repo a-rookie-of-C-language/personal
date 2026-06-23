@@ -278,7 +278,16 @@ export type ProjectCaseCopy = {
   architectureSubtitle?: string
   architectureLayers?: ProjectArchitectureLayer[]
   architectureRelations?: string[]
+  extraArchitectures?: ProjectArchitectureDiagram[]
   dataFlow?: string[]
+}
+
+export type ProjectArchitectureDiagram = {
+  title?: string
+  subtitle?: string
+  layers?: ProjectArchitectureLayer[]
+  relations?: string[]
+  fallbackItems?: string[]
 }
 
 export type ProjectArchitectureLayer = {
@@ -475,6 +484,21 @@ export const projectCaseCopy: Record<string, ProjectCaseCopy> = {
     architectureTitle: '业务架构图',
     architectureSubtitle: '角色 / 学生主线 / 管理闭环 / AI 辅助 / 治理数据',
     architecture: ['角色入口', '学生主线业务', '日常管理闭环', 'AI 辅助业务', '治理与数据资产'],
+    extraArchitectures: [
+      {
+        title: '技术架构图',
+        subtitle: '前端入口 / 网关路由 / 业务服务 / AI 编排 / 基础设施',
+        layers: [
+          { title: '用户与桌面层', items: ['React + TypeScript + Ant Design', 'Tauri v2 shell', 'auth store', 'chat/RAG/student/check-in/audit/monitor pages'] },
+          { title: '统一网关层', items: ['Spring Cloud Gateway', '/api route', 'JWT 协同', 'risk-control precheck', 'trace / metrics'] },
+          { title: '业务微服务层', items: ['auth-service', 'chat-service', 'rag-service', 'memory-service', 'audit-service', 'student/teacher/check-in/feedback-service'] },
+          { title: 'AI 编排层', items: ['Python FastAPI agent', 'ChatStreamService', 'RAG indexing', 'tool calling', 'memory context'] },
+          { title: '模型治理层', items: ['backend/ai-gateway', 'OpenAI-compatible provider', 'model routing', 'rate limit', 'token usage audit'] },
+          { title: '基础设施层', items: ['PostgreSQL + pgvector', 'Redis', 'Kafka', 'Nacos', 'Jaeger', 'Prometheus / Grafana', 'Ollama bge-m3'] },
+        ],
+        relations: ['前端统一访问 /api', 'gateway 路由并风控', '微服务调用 agent / 内部 API', 'Agent 调用 RAG/Tools/Memory', '模型治理与基础设施支撑'],
+      },
+    ],
     dataFlow: ['管理员/辅导员/班委按角色进入系统', '辅导员导入或维护学生档案并绑定班级归属', '打卡和课堂考勤产生记录、异常与工单', 'AI 对话结合知识库、记忆和业务内部接口辅助处理', '审计、风控、反馈和监控沉淀可追溯运营数据'],
   },
   'rust-spring': {

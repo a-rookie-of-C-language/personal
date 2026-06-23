@@ -551,6 +551,16 @@ function ProjectDetail() {
           relations={copy.architectureRelations}
           fallbackItems={copy.architecture || []}
         />
+        {copy.extraArchitectures?.map((diagram) => (
+          <ProjectArchitecture
+            key={`${diagram.title}-${diagram.subtitle}`}
+            title={diagram.title}
+            subtitle={diagram.subtitle}
+            layers={diagram.layers}
+            relations={diagram.relations}
+            fallbackItems={diagram.fallbackItems || []}
+          />
+        ))}
         <ProjectFlow title="数据流转图" items={copy.dataFlow || []} />
       </section>
       {evidence.length > 0 && (
