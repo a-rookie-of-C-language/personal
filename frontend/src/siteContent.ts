@@ -343,9 +343,9 @@ export const projectCaseEnhancements: Record<string, Pick<ProjectCaseCopy, 'high
     decisions: ['采用阶段化学习路线，不一开始追求完整 RocketMQ。', '先抽象消息、队列、生产者、消费者和处理器，再逐步替换存储实现。', '用 JSON 持久化与简单并发原语刻画消息中间件核心语义。'],
   },
   'Advisor AI Platform': {
-    highlights: ['React/Tauri + Spring Cloud 微服务 + Python Agent', 'Gateway 统一 /api 入口', 'RAG + Memory + Risk Control', 'PostgreSQL/pgvector、Redis、Kafka、Nacos', 'chat/memory/JMeter 联调脚本'],
-    details: ['backend Maven modules 包含 common-core、gateway、chat-service、auth-service、rag-service、memory-service、audit-service、risk-control-service、student-service、teacher-service、check-in-service、feedback-service。', 'docs/architecture.md 明确 frontend -> gateway -> Java 微服务 -> agent -> ai-gateway/LLM/RAG/Memory 的职责边界。', 'README 提供 chat_e2e_drill、memory_e2e_drill、run_memory_jmeter、push_nacos_common_config 等脚本验证链路。'],
-    decisions: ['前端只访问统一 /api，由 gateway 做路由转发、JWT 协同、风控前置、trace 和指标暴露。', '业务微服务负责数据与流程，Python agent 只承担 AI 编排、RAG 检索、工具调用、记忆上下文和安全过滤。', '把 ai-gateway 定位为模型供应商治理网关，与业务 gateway 分离，避免职责混淆。'],
+    highlights: ['辅导员学生工作台', '学生主线业务对象', '学生档案/导入/详情', '打卡与课堂考勤闭环', 'AI 对话 + RAG + Memory 辅助决策', '审计/风控/反馈治理'],
+    details: ['前端菜单按角色开放工作台、学生管理、打卡管理、课堂考勤、知识库管理、AI 对话、反馈、审计日志和监控中心。', '学生业务包含档案分页、详情、Excel 模板/导入、重复学号处理、班级/辅导员归属，以及学生签到摘要和明细。', '考勤业务包含课程排课、课堂考勤、异常处理和工单审核，MONITOR 角色可进入课堂考勤。', 'AI 侧由 chat-service 调用 agent，结合 RAG 知识库、Memory 长期记忆、学生/考勤内部接口和 MCP 工具入口服务辅导员问答。'],
+    decisions: ['业务架构以“学生”为主对象，而不是以微服务部署为主轴：档案、导入、签到、考勤、异常和学生详情都围绕学生组织。', '角色边界按 ADMIN、ADVISOR、MONITOR 划分，菜单、路由和后端 PreAuthorize 共同控制业务可见范围。', 'AI 能力放在业务辅助层：RAG、Memory、Agent 工具和 MCP 不替代业务系统，而是读取知识与上下文辅助辅导员处理学生工作。', '审计、风控、反馈和监控作为横向治理能力，覆盖写入、聊天、工单、问题反馈和运维状态。'],
   },
   arookieofcDB: {
     highlights: ['Rust 2024 KV 引擎', 'WAL 追加日志', 'B+Tree 索引持久化', 'Checkpoint 恢复', 'inventory 编译期 IoC'],
@@ -433,12 +433,12 @@ export const projectArchitectureLayers: Record<string, ProjectArchitectureLayer[
     { title: '学习演进层', items: ['Phase 1 FIFO', 'Phase 2 persistence', 'Phase 3 handler', 'Broker roadmap'] },
   ],
   'Advisor AI Platform': [
-    { title: '用户与桌面层', items: ['React + TypeScript + Ant Design', 'Tauri v2 shell', 'auth store', 'chat/RAG/student/check-in/audit/monitor pages'] },
-    { title: '统一网关层', items: ['Spring Cloud Gateway', '/api route', 'JWT 协同', 'risk-control precheck', 'trace / metrics'] },
-    { title: '业务微服务层', items: ['auth-service', 'chat-service', 'rag-service', 'memory-service', 'audit-service', 'student/teacher/check-in/feedback-service'] },
-    { title: 'AI 编排层', items: ['Python FastAPI agent', 'ChatStreamService', 'RAG indexing', 'tool calling', 'memory context'] },
-    { title: '模型治理层', items: ['backend/ai-gateway', 'OpenAI-compatible provider', 'model routing', 'rate limit', 'token usage audit'] },
-    { title: '基础设施层', items: ['PostgreSQL + pgvector', 'Redis', 'Kafka', 'Nacos', 'Jaeger', 'Prometheus / Grafana', 'Ollama bge-m3'] },
+    { title: '角色与入口', items: ['ADMIN 管理员', 'ADVISOR 辅导员', 'MONITOR 班委/考勤员', '工作台', '学生管理', '打卡/课堂考勤', '知识库与 AI 对话'] },
+    { title: '学生主线业务', items: ['学生档案', 'Excel 导入与批次', '重复学号处理', '班级/辅导员归属', '学生详情', '签到摘要/明细'] },
+    { title: '日常管理闭环', items: ['打卡活动', '课程排课', '课堂考勤记录', '异常处理', '考勤工单审核', '反馈 Issue'] },
+    { title: 'AI 辅助业务', items: ['会话与消息', 'RAG 知识库', 'Memory 长期记忆', 'Agent 工具调用', '学生/考勤内部接口', 'MCP message'] },
+    { title: '治理与运营', items: ['JWT 登录鉴权', '角色路由控制', '写入风控', '审计日志', '监控中心', '用户反馈闭环'] },
+    { title: '业务数据资产', items: ['学生档案/导入批次', '签到与考勤数据', '工单与异常记录', '知识库文档/向量片段', '聊天记录/引用', 'Memory / Audit / Feedback'] },
   ],
   arookieofcDB: [
     { title: '交互与命令层', items: ['main.rs', 'Cli::run', 'set/get/delete builtins', 'CommandExecutor'] },
@@ -462,18 +462,20 @@ export const projectArchitectureRelations: Record<string, string[]> = {
   'Agentic RAG Tool System': ['HTTP/CLI 请求进入 Agent', '编排层选择工具', '权限与 schema 校验', '向量召回 + rerank 后回填上下文'],
   arookieofcOS: ['源码状态约束展示口径', 'UI 事件触发 invoke', 'IPC 调用 Rust handler', 'handler 访问系统资源'],
   arookieofcMQ: ['示例调用 API', 'API 创建消息对象', '消息进入队列实现', '生产消费线程协作并按阶段演进'],
-  'Advisor AI Platform': ['前端统一访问 /api', 'gateway 路由并风控', '微服务调用 agent / 内部 API', 'Agent 调用 RAG/Tools/Memory', '模型治理与基础设施支撑'],
+  'Advisor AI Platform': ['角色进入受控菜单', '学生主线驱动日常事务', '考勤/反馈形成处置闭环', 'AI 读取知识与业务上下文辅助处理', '治理能力沉淀可追溯数据'],
   arookieofcDB: ['CLI 解析命令', 'IoC 初始化组件', '引擎先写 WAL 再改索引', 'B+Tree 持久化数据页', 'WAL replay 与 checkpoint 恢复'],
 }
 
 export const projectCaseCopy: Record<string, ProjectCaseCopy> = {
   'Advisor AI Platform': {
     focus: '全栈智能顾问平台',
-    challenge: '把前端、业务后端、RAG Agent 服务、向量检索和认证链路组合成可演练的完整系统。',
-    solution: '用 React 承载交互，Spring Boot 拆分业务边界，Python RAG 服务处理检索增强，PostgreSQL/pgvector 管理知识检索。',
-    impact: '体现跨语言系统集成能力，以及从用户入口到 Agent 服务的端到端工程闭环。',
-    architecture: ['React 交互层', 'Spring Boot 业务 API', 'RAG Agent 服务', 'PostgreSQL / pgvector'],
-    dataFlow: ['用户提问', '业务 API 鉴权与编排', 'Agent 检索知识库', '模型生成回答', '前端呈现结果'],
+    challenge: '辅导员工作不是单一聊天场景，而是学生档案、导入、签到、课堂考勤、异常工单、知识库问答、审计和反馈交织在一起的业务闭环。',
+    solution: '以学生为主业务对象组织档案和归属关系，用打卡/考勤/工单承接日常管理，用 AI 对话、RAG、Memory 和 Agent 工具辅助辅导员查询政策、理解上下文和处理学生事务。',
+    impact: '展示从高校学生工作业务拆解，到 AI 辅助、治理审计和多角色权限协同的完整产品架构能力。',
+    architectureTitle: '业务架构图',
+    architectureSubtitle: '角色 / 学生主线 / 管理闭环 / AI 辅助 / 治理数据',
+    architecture: ['角色入口', '学生主线业务', '日常管理闭环', 'AI 辅助业务', '治理与数据资产'],
+    dataFlow: ['管理员/辅导员/班委按角色进入系统', '辅导员导入或维护学生档案并绑定班级归属', '打卡和课堂考勤产生记录、异常与工单', 'AI 对话结合知识库、记忆和业务内部接口辅助处理', '审计、风控、反馈和监控沉淀可追溯运营数据'],
   },
   'rust-spring': {
     focus: 'Rust 后端框架实验',
