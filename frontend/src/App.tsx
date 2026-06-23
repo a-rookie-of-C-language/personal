@@ -545,6 +545,8 @@ function ProjectDetail() {
       )}
       <section className="diagram-section">
         <ProjectArchitecture
+          title={copy.architectureTitle}
+          subtitle={copy.architectureSubtitle}
           layers={copy.architectureLayers}
           relations={copy.architectureRelations}
           fallbackItems={copy.architecture || []}
@@ -582,10 +584,14 @@ function ProjectList({ title, items }: { title: string; items: string[] }) {
 }
 
 function ProjectArchitecture({
+  title,
+  subtitle,
   layers,
   relations,
   fallbackItems,
 }: {
+  title?: string
+  subtitle?: string
   layers?: { title: string; items: string[] }[]
   relations?: string[]
   fallbackItems: string[]
@@ -597,8 +603,8 @@ function ProjectArchitecture({
   return (
     <article className="flow-card architecture-card">
       <div className="diagram-title-row">
-        <h2>架构图</h2>
-        <span>分层 / 边界 / 调用关系</span>
+        <h2>{title || '架构图'}</h2>
+        <span>{subtitle || '分层 / 边界 / 调用关系'}</span>
       </div>
       <div className="architecture-diagram">
         {effectiveLayers.map((layer, index) => (

@@ -262,6 +262,8 @@ export type ProjectCaseCopy = {
   details?: string[]
   decisions?: string[]
   architecture?: string[]
+  architectureTitle?: string
+  architectureSubtitle?: string
   architectureLayers?: ProjectArchitectureLayer[]
   architectureRelations?: string[]
   dataFlow?: string[]
@@ -349,11 +351,11 @@ export const projectArchitectureLayers: Record<string, ProjectArchitectureLayer[
     { title: '运行层', items: ['HTTP Server', 'Handler 分发', '请求响应'] },
   ],
   AIGateway: [
-    { title: '启动与接口', items: ['main.rs', 'bootstrap/build_app', 'Axum Router', 'health / completions / stream'] },
-    { title: 'HTTP 治理', items: ['request_id', 'auth middleware', 'rate_limit middleware', 'UnifiedJson / validator'] },
-    { title: '应用与领域', items: ['ChatAppService', 'ProviderRouter', 'Gateway Orchestration', 'Quota & Billing', 'Tenant Access Control'] },
-    { title: '基础设施', items: ['RedisRateLimitDao', 'RedisQuotaPolicyDao', 'PostgresTenantDao', 'PostgresTokenUsageDao', 'OpenAICompatibleGateway'] },
-    { title: '外部依赖', items: ['Redis', 'PostgreSQL migrations', 'OpenAI-compatible API', 'SSE upstream stream'] },
+    { title: '运行时与框架', items: ['Rust 2021', 'Tokio async runtime', 'Axum 0.7', 'tracing / env-filter'] },
+    { title: '网关接入层', items: ['Axum Router', 'request_id', 'auth middleware', 'rate_limit middleware', 'UnifiedJson / validator'] },
+    { title: '应用编排层', items: ['ChatAppService', 'ProviderRouter', 'ChatGateway port', 'retry + backoff', 'SSE usage channel'] },
+    { title: '治理与持久化', items: ['Redis Lua sliding window', 'Redis token quota', 'SQLx migrations', 'Tenant / Usage / Audit DAO'] },
+    { title: '外部技术依赖', items: ['Redis', 'PostgreSQL', 'OpenAI-compatible API', 'reqwest client', 'upstream SSE stream'] },
   ],
   ferryllm: [
     { title: '客户端层', items: ['GUI', 'CLI', 'IDE / Agent 客户端'] },
@@ -414,7 +416,7 @@ export const projectArchitectureLayers: Record<string, ProjectArchitectureLayer[
 export const projectArchitectureRelations: Record<string, string[]> = {
   'Personal Blog Studio': ['HTTP 访问', '组件读取静态数据', 'GitHub Actions / Vite 发布'],
   'rust-spring': ['宏展开注册', '依赖注入', '路由分发'],
-  AIGateway: ['HTTP / JSON / SSE', 'TenantIdentity + 多维限流', '领域端口调用', 'Redis / SQLx / Reqwest 适配'],
+  AIGateway: ['HTTP / JSON / SSE', '中间件生成 TenantIdentity', '领域端口 + 重试编排', 'Redis / SQLx / Reqwest 适配'],
   ferryllm: ['本地请求', '协议归一', 'Provider 调用 / 流式转发'],
   cxxmcp: ['SDK 调用', 'JSON-RPC 消息', 'Transport / Conformance 校验'],
   WinuxCmd: ['进程调用', '参数 / stdin 输入', 'stdout / stderr 输出'],
@@ -488,6 +490,8 @@ export const projectCaseCopy: Record<string, ProjectCaseCopy> = {
     challenge: '网关不只是转发模型请求，还要在租户身份、API Key 安全校验、多维限流、Token 日配额、流式 usage 回写、Provider 路由和审计持久化之间保持一致性。',
     solution: '用 Rust + Axum 构建 DDD 三层架构，interfaces 负责 HTTP handler 和中间件，application 负责 ChatAppService 编排与重试，domain 定义网关/租户/配额/限流/审计端口，infrastructure 用 Redis、PostgreSQL、reqwest 和 OpenAI-compatible adapter 提供实现。',
     impact: '展示了 AI 基础设施里更接近生产系统的治理能力：认证、限流、配额、流式处理、用量计费、审计和外部 Provider 适配都有明确边界。',
+    architectureTitle: '技术架构图',
+    architectureSubtitle: '运行时 / 中间件 / 技术组件 / 基础设施',
     architecture: ['Axum Router / Middleware', 'ChatAppService / Domain Ports', 'Redis + PostgreSQL DAO', 'OpenAI-compatible Provider'],
     dataFlow: ['请求进入 Axum Router', 'request_id、auth、rate_limit 中间件生成 TenantIdentity 并执行多维限流', 'handler 校验 JSON、估算 token 并预扣 Redis 配额', 'ChatAppService 通过 ProviderRouter 选择 ChatGateway 并重试调用', '非流式写入 token_usage_records，流式通过 usage oneshot 异步补扣/回滚', 'SSE raw/done/error 或 JSON 响应返回客户端'],
   },
