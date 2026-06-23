@@ -113,10 +113,10 @@ export const curatedProjects: Project[] = [
   {
     id: 3,
     name: 'AIGateway',
-    description: '面向 AI 模型服务的网关系统，关注 API Key、租户隔离、限流、Provider 路由和流式响应。',
+    description: 'Rust 实现的高并发模型网关与限流计费系统，覆盖租户 API Key、Redis 多维限流、Token 配额、PostgreSQL 用量审计和 OpenAI-compatible Provider 适配。',
     url: '',
     repoUrl: 'https://github.com/a-rookie-of-C-language/AI_Gateway',
-    techStack: 'Rust, Axum, DDD, LLM Gateway, Streaming',
+    techStack: 'Rust, Axum, Tokio, Redis, PostgreSQL, SQLx, Reqwest, SSE, DDD',
     featured: true,
   },
   {
@@ -284,9 +284,9 @@ export const projectCaseEnhancements: Record<string, Pick<ProjectCaseCopy, 'high
     decisions: ['用过程宏表达 Spring 注解语义，而不是运行时字符串配置。', '保留 IoC 体验，同时让依赖关系受 Rust 类型系统约束。', '先实现核心容器、配置和路由，再扩展生态模块。'],
   },
   AIGateway: {
-    highlights: ['多租户 API Key', '流式聊天端点', 'DDD 分层网关'],
-    details: ['公开 health、chat completions 和 SSE stream 入口。', '以 domain/application/infrastructure/interfaces 划分依赖方向。', '围绕 Provider 路由、限流、配额和鉴权拆分边界。'],
-    decisions: ['用 DDD 分层隔离鉴权、限流、Provider 和 HTTP 边界。', '保留 OpenAI 兼容接口，降低客户端迁移成本。', '流式响应使用 SSE，便于调试和浏览器/CLI 消费。'],
+    highlights: ['DDD 三层依赖方向', 'Redis Lua 滑动窗口限流', '租户 API Key + Master Key 双鉴权', 'Token 配额预扣/补扣/回滚', 'SSE 流式转发与 usage 异步回写'],
+    details: ['公开 /v1/health、/v1/chat/completions、/v1/chat/stream 三个入口。', 'auth 中间件支持 ak_<key_id>.<secret>，通过 PostgreSQL 查询租户并用 Argon2 校验 secret，同时保留 constant-time master key fallback。', 'rate_limit 中间件按 tenant、route、model 组合生成 Redis key，用 Lua ZSET 滑动窗口返回 remaining/reset headers。', 'chat handler 会先估算 token 并消费 Redis 日配额，Provider 返回后按真实 usage 做补扣或回滚，并可写入 token_usage_records。', 'OpenAICompatibleGateway 用 reqwest 调用 /chat/completions，流式路径解析上游 data: SSE 行，处理 buffer overflow、chunk timeout、keepalive 和 usage oneshot。'],
+    decisions: ['把领域端口放在 domain，HTTP handler、Redis/PostgreSQL DAO、Provider adapter 都作为外层实现，保持 interfaces -> application -> domain 的依赖方向。', '用 Redis 承担两类高频状态：滑动窗口限流和每日 token 配额，PostgreSQL 只保存租户、用量和审计等长期数据。', '流式链路不直接相信预估 token，而是先预扣保证配额，再通过 usage 通道异步补扣/回滚。', '认证同时支持租户 API Key 与管理密钥，便于生产租户隔离和本地/管理场景调试。'],
   },
   ferryllm: {
     highlights: ['桌面优先 LLM Gateway', '多客户端启动器', '统一 Provider 配置'],
@@ -349,10 +349,11 @@ export const projectArchitectureLayers: Record<string, ProjectArchitectureLayer[
     { title: '运行层', items: ['HTTP Server', 'Handler 分发', '请求响应'] },
   ],
   AIGateway: [
-    { title: '接入层', items: ['Axum HTTP', 'OpenAI 兼容 API', 'SSE 流式端点'] },
-    { title: '治理层', items: ['API Key', '租户隔离', '限流与配额'] },
-    { title: '应用层', items: ['聊天编排', 'Provider 路由', '请求归一'] },
-    { title: '外部服务', items: ['Provider 适配器', '模型服务', '流式响应'] },
+    { title: '启动与接口', items: ['main.rs', 'bootstrap/build_app', 'Axum Router', 'health / completions / stream'] },
+    { title: 'HTTP 治理', items: ['request_id', 'auth middleware', 'rate_limit middleware', 'UnifiedJson / validator'] },
+    { title: '应用与领域', items: ['ChatAppService', 'ProviderRouter', 'Gateway Orchestration', 'Quota & Billing', 'Tenant Access Control'] },
+    { title: '基础设施', items: ['RedisRateLimitDao', 'RedisQuotaPolicyDao', 'PostgresTenantDao', 'PostgresTokenUsageDao', 'OpenAICompatibleGateway'] },
+    { title: '外部依赖', items: ['Redis', 'PostgreSQL migrations', 'OpenAI-compatible API', 'SSE upstream stream'] },
   ],
   ferryllm: [
     { title: '客户端层', items: ['GUI', 'CLI', 'IDE / Agent 客户端'] },
@@ -413,7 +414,7 @@ export const projectArchitectureLayers: Record<string, ProjectArchitectureLayer[
 export const projectArchitectureRelations: Record<string, string[]> = {
   'Personal Blog Studio': ['HTTP 访问', '组件读取静态数据', 'GitHub Actions / Vite 发布'],
   'rust-spring': ['宏展开注册', '依赖注入', '路由分发'],
-  AIGateway: ['HTTP / SSE', '鉴权后进入应用编排', 'Provider API 调用'],
+  AIGateway: ['HTTP / JSON / SSE', 'TenantIdentity + 多维限流', '领域端口调用', 'Redis / SQLx / Reqwest 适配'],
   ferryllm: ['本地请求', '协议归一', 'Provider 调用 / 流式转发'],
   cxxmcp: ['SDK 调用', 'JSON-RPC 消息', 'Transport / Conformance 校验'],
   WinuxCmd: ['进程调用', '参数 / stdin 输入', 'stdout / stderr 输出'],
@@ -483,12 +484,12 @@ export const projectCaseCopy: Record<string, ProjectCaseCopy> = {
     dataFlow: ['用户输入命令', '词法分析生成 token', '解析为 AST', '执行重定向和内建/外部命令', '返回退出码和输出'],
   },
   AIGateway: {
-    focus: '模型网关与流量治理',
-    challenge: '模型服务需要租户隔离、API Key、流式端点、限流和 Provider 边界。',
-    solution: '用 Rust 与 Axum 建立 DDD 分层，把接入、治理和 Provider 集成拆成清晰模块。',
-    impact: '体现 AI 基础设施、服务治理和 Rust Web 后端能力。',
-    architecture: ['Axum HTTP 入口', '鉴权与租户层', '限流/治理服务', 'Provider 适配层', '模型服务'],
-    dataFlow: ['客户端携带 API Key', '网关鉴权和计量', '应用限流策略', '路由到 Provider', '流式/非流式响应回传'],
+    focus: '高并发模型网关与限流计费系统',
+    challenge: '网关不只是转发模型请求，还要在租户身份、API Key 安全校验、多维限流、Token 日配额、流式 usage 回写、Provider 路由和审计持久化之间保持一致性。',
+    solution: '用 Rust + Axum 构建 DDD 三层架构，interfaces 负责 HTTP handler 和中间件，application 负责 ChatAppService 编排与重试，domain 定义网关/租户/配额/限流/审计端口，infrastructure 用 Redis、PostgreSQL、reqwest 和 OpenAI-compatible adapter 提供实现。',
+    impact: '展示了 AI 基础设施里更接近生产系统的治理能力：认证、限流、配额、流式处理、用量计费、审计和外部 Provider 适配都有明确边界。',
+    architecture: ['Axum Router / Middleware', 'ChatAppService / Domain Ports', 'Redis + PostgreSQL DAO', 'OpenAI-compatible Provider'],
+    dataFlow: ['请求进入 Axum Router', 'request_id、auth、rate_limit 中间件生成 TenantIdentity 并执行多维限流', 'handler 校验 JSON、估算 token 并预扣 Redis 配额', 'ChatAppService 通过 ProviderRouter 选择 ChatGateway 并重试调用', '非流式写入 token_usage_records，流式通过 usage oneshot 异步补扣/回滚', 'SSE raw/done/error 或 JSON 响应返回客户端'],
   },
   'Agentic RAG Tool System': {
     focus: '工具化 RAG 系统',
