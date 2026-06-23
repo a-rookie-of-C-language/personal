@@ -558,9 +558,9 @@ function ProjectDetail() {
         </section>
       )}
       <section className="architecture-strip">
-        <p className="eyebrow">ARCHITECTURE NOTE</p>
+        <p className="eyebrow">CASE COVERAGE</p>
         <h2>我希望这个项目被看到的不是截图，而是工程取舍。</h2>
-        <p>项目详情页后续可以继续接入截图、架构图、部署地址和更细的实现记录；当前先把作品从“列表项”升级成“技术案例”。</p>
+        <p>每个项目详情页都已经覆盖项目定位、核心难点、实现方式、体现能力、关键看点、工程细节、工程决策、架构图、数据流转图和来源证据。</p>
       </section>
     </main>
   )
