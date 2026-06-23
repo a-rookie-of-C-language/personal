@@ -800,7 +800,8 @@
 
 .resume-skill-grid,
 .timeline-list,
-.case-grid {
+.case-grid,
+.project-insight-grid {
   display: grid;
   gap: 16px;
 }
@@ -812,6 +813,7 @@
 .resume-skill-grid article,
 .timeline-list article,
 .case-grid article,
+.project-list-card,
 .architecture-strip,
 .deployment-panel {
   background: rgba(255, 255, 255, 0.94);
@@ -823,6 +825,7 @@
 .resume-skill-grid h3,
 .timeline-list h3,
 .case-grid h2,
+.project-list-card h2,
 .architecture-strip h2,
 .deployment-panel h2 {
   color: #09090b;
@@ -847,6 +850,7 @@
 
 .timeline-list p,
 .case-grid p,
+.project-list-card li,
 .architecture-strip p,
 .deployment-panel li {
   color: #52525b;
@@ -878,6 +882,22 @@
 
 .case-grid {
   grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.project-insight-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-top: 16px;
+}
+
+.project-list-card ul {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding-left: 20px;
+}
+
+.project-list-card li::marker {
+  color: #2563eb;
 }
 
 .architecture-strip {
@@ -1447,6 +1467,7 @@ button,
   .resume-skill-grid,
   .timeline-list,
   .case-grid,
+  .project-insight-grid,
   .deployment-panel,
   .repo-contribution-grid {
     grid-template-columns: 1fr;

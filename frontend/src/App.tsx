@@ -536,6 +536,12 @@ function ProjectDetail() {
           <p>{copy.impact}</p>
         </article>
       </section>
+      {(copy.highlights?.length || copy.details?.length) && (
+        <section className="project-insight-grid">
+          {copy.highlights?.length ? <ProjectList title="关键看点" items={copy.highlights} /> : null}
+          {copy.details?.length ? <ProjectList title="工程细节" items={copy.details} /> : null}
+        </section>
+      )}
       <section className="diagram-section">
         <ProjectFlow title="架构图" items={copy.architecture || []} />
         <ProjectFlow title="数据流转图" items={copy.dataFlow || []} />
@@ -556,6 +562,17 @@ function ProjectDetail() {
         <p>项目详情页后续可以继续接入截图、架构图、部署地址和更细的实现记录；当前先把作品从“列表项”升级成“技术案例”。</p>
       </section>
     </main>
+  )
+}
+
+function ProjectList({ title, items }: { title: string; items: string[] }) {
+  return (
+    <article className="project-list-card">
+      <h2>{title}</h2>
+      <ul>
+        {items.map((item) => <li key={item}>{item}</li>)}
+      </ul>
+    </article>
   )
 }
 

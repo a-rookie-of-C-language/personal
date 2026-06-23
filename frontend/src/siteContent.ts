@@ -115,7 +115,7 @@ export const curatedProjects: Project[] = [
     name: 'AIGateway',
     description: '面向 AI 模型服务的网关系统，关注 API Key、租户隔离、限流、Provider 路由和流式响应。',
     url: '',
-    repoUrl: 'https://github.com/a-rookie-of-C-language/AIGateway',
+    repoUrl: 'https://github.com/a-rookie-of-C-language/AI_Gateway',
     techStack: 'Rust, Axum, DDD, LLM Gateway, Streaming',
     featured: true,
   },
@@ -142,7 +142,7 @@ export const curatedProjects: Project[] = [
     name: 'WinuxCmd',
     description: 'Windows 原生命令行工具集，用 C++ 提供轻量 Linux 风格命令，适合管道组合和日常终端工作流。',
     url: '',
-    repoUrl: 'https://github.com/a-rookie-of-C-language/WinuxCmd',
+    repoUrl: 'https://github.com/unixwin/WinuxCmd',
     techStack: 'C++, Windows CLI, File Tools, Terminal',
     featured: false,
   },
@@ -151,7 +151,7 @@ export const curatedProjects: Project[] = [
     name: 'WinuxSH',
     description: 'Rust Windows Shell 实验，覆盖命令解析、补全、脚本、主题和插件化扩展。',
     url: '',
-    repoUrl: 'https://github.com/a-rookie-of-C-language/WinuxSH',
+    repoUrl: 'https://github.com/unixwin/winuxsh',
     techStack: 'Rust, Shell, Parser, Plugin, Windows',
     featured: true,
   },
@@ -204,13 +204,13 @@ export const curatedProjects: Project[] = [
 
 export const projectEvidence: Record<string, { label: string; url: string }[]> = {
   'Personal Blog Studio': [
-    { label: 'GitHub profile', url: 'https://github.com/a-rookie-of-C-language' },
+    { label: 'GitHub repository', url: 'https://github.com/a-rookie-of-C-language/personal' },
   ],
   'rust-spring': [
     { label: 'GitHub repository', url: 'https://github.com/a-rookie-of-C-language/rust-spring' },
   ],
   AIGateway: [
-    { label: 'GitHub repository', url: 'https://github.com/a-rookie-of-C-language/AIGateway' },
+    { label: 'GitHub repository', url: 'https://github.com/a-rookie-of-C-language/AI_Gateway' },
   ],
   ferryllm: [
     { label: 'docs.rs crate', url: 'https://docs.rs/ferryllm/latest/ferryllm/' },
@@ -220,10 +220,10 @@ export const projectEvidence: Record<string, { label: string; url: string }[]> =
     { label: 'GitHub repository', url: 'https://github.com/a-rookie-of-C-language/cxxmcp' },
   ],
   WinuxCmd: [
-    { label: 'GitHub repository', url: 'https://github.com/a-rookie-of-C-language/WinuxCmd' },
+    { label: 'GitHub repository', url: 'https://github.com/unixwin/WinuxCmd' },
   ],
   WinuxSH: [
-    { label: 'GitHub repository', url: 'https://github.com/a-rookie-of-C-language/WinSH' },
+    { label: 'GitHub repository', url: 'https://github.com/unixwin/winuxsh' },
   ],
   rubash: [
     { label: 'crates.io package', url: 'https://crates.io/crates/rubash' },
@@ -239,7 +239,7 @@ export const projectEvidence: Record<string, { label: string; url: string }[]> =
     { label: 'GitHub repository', url: 'https://github.com/a-rookie-of-C-language/arookieofcMQ' },
   ],
   'Advisor AI Platform': [
-    { label: 'GitHub profile', url: 'https://github.com/a-rookie-of-C-language' },
+    { label: 'GitHub repository', url: 'https://github.com/ai-cqut/advisor-ai-platform' },
   ],
 }
 
@@ -258,8 +258,61 @@ export type ProjectCaseCopy = {
   challenge: string
   solution: string
   impact: string
+  highlights?: string[]
+  details?: string[]
   architecture?: string[]
   dataFlow?: string[]
+}
+
+export const projectCaseEnhancements: Record<string, Pick<ProjectCaseCopy, 'highlights' | 'details'>> = {
+  'Personal Blog Studio': {
+    highlights: ['纯前端静态部署', 'GitHub Pages 自动发布', '构建时同步 GitHub 活动数据'],
+    details: ['使用 Vite base 适配自定义域名根路径。', '通过 GitHub Actions 构建前生成贡献数据 JSON。', '将项目案例、组织信息和公开协作记录统一为静态内容。'],
+  },
+  'rust-spring': {
+    highlights: ['注解式 IoC', 'Spring Boot 风格启动器', '配置注入与组件注册'],
+    details: ['用过程宏表达 Component、Bean、Value 等 Spring 语义。', '以容器注册和依赖注入组织服务启动链路。', '保留 Rust 类型系统和编译期约束下的框架实验价值。'],
+  },
+  AIGateway: {
+    highlights: ['多租户 API Key', '流式聊天端点', 'DDD 分层网关'],
+    details: ['公开 health、chat completions 和 SSE stream 入口。', '以 domain/application/infrastructure/interfaces 划分依赖方向。', '围绕 Provider 路由、限流、配额和鉴权拆分边界。'],
+  },
+  ferryllm: {
+    highlights: ['桌面优先 LLM Gateway', '多客户端启动器', '统一 Provider 配置'],
+    details: ['GUI 与 CLI 共享 Rust gateway core。', '面向 Codex、Claude Code、OpenCode、VS Code 等客户端注入运行环境。', '保留 OpenAI/Anthropic/OpenAI-compatible 后端的协议适配空间。'],
+  },
+  cxxmcp: {
+    highlights: ['C++17 MCP SDK', 'JSON-RPC 建模', '高覆盖协议一致性'],
+    details: ['README 展示 server/client conformance 证据。', '通过 CMake 和 release gates 组织跨平台发布质量。', '实现面向工具、客户端和服务端的 MCP 基础模型。'],
+  },
+  WinuxCmd: {
+    highlights: ['GNU-style Windows 命令', 'PowerShell/cmd 兼容', '轻量原生工具集'],
+    details: ['面向没有 WSL/VM 的 Windows 自动化环境。', '将 Linux 风格 one-liner 带到 PowerShell、cmd 和 Windows Terminal。', '关注 AI sandbox、CI 日志和日常管道组合中的命令可用性。'],
+  },
+  WinuxSH: {
+    highlights: ['860+ 命令补全', '通配符和命令替换', '主题与插件架构'],
+    details: ['使用 Rust 实现现代 Unix-style Windows shell。', '支持 .sh 脚本、历史记录、数组系统和 PATH 命令发现。', '与 WinuxCmd 形成 Windows 终端体验的工具链组合。'],
+  },
+  rubash: {
+    highlights: ['GNU Bash Rust 重写', '上游 Bash 测试 runner', 'crates.io 发布'],
+    details: ['当前 alpha 阶段，重点覆盖 lexer、parser、executor 和 builtins。', '通过隔离 workdir/HOME/TMPDIR 的 upstream runner 追踪兼容性。', '以 TDD 方式逐步补齐变量展开、控制流、管道和作业控制。'],
+  },
+  'Agentic RAG Tool System': {
+    highlights: ['RAG 工具化', 'MCP/CLI 入口', 'DAO-Service-Runtime 分层'],
+    details: ['把检索增强能力封装成 Agent 可调用工具。', '通过 Tool Schema 明确输入输出契约。', '面向可组合工作流而不是单次问答组织运行时。'],
+  },
+  arookieofcOS: {
+    highlights: ['Tauri 桌面实验', 'React + Rust IPC', '系统面板与命令桥'],
+    details: ['用前端 UI 承载桌面交互，用 Rust command 处理系统能力。', '关注文件、终端、监控和系统信息的统一入口。', '体现桌面端工程与系统集成的探索。'],
+  },
+  arookieofcMQ: {
+    highlights: ['RocketMQ 学习路线', 'FIFO 队列', '生产者消费者模型'],
+    details: ['README 采用阶段化路线，从简单队列推进到持久化和 Broker 架构。', '当前重点是消息定义、队列 trait 和基础队列实现。', '用于拆解消息中间件的核心语义和演进过程。'],
+  },
+  'Advisor AI Platform': {
+    highlights: ['React + Spring Boot + Python Agent', 'PostgreSQL / pgvector', '聊天链路联调脚本'],
+    details: ['前端、后端 API 和 Agent 服务分离部署与联调。', '后端负责业务鉴权和编排，Agent 负责 RAG 索引与检索。', 'README 提供 auth/smoke 脚本验证聊天主链路。'],
+  },
 }
 
 export const projectCaseCopy: Record<string, ProjectCaseCopy> = {
@@ -303,7 +356,7 @@ export const projectCaseCopy: Record<string, ProjectCaseCopy> = {
     architecture: ['命令入口', '参数解析', '文件/文本处理核心', 'Windows API 适配', '标准输出'],
     dataFlow: ['Shell 调用命令', '解析参数与 stdin', '执行文本/文件操作', '写入 stdout/stderr', '交给管道下游'],
   },
-  WinSH: {
+  WinuxSH: {
     focus: 'Rust Windows Shell',
     challenge: 'Shell 不只是命令执行，还要处理补全、通配符、脚本、主题和插件扩展。',
     solution: '用 Rust 实现解析、补全、命令替换、数组和插件结构，面向现代终端体验组织能力。',
@@ -363,7 +416,7 @@ export const projectCaseCopy: Record<string, ProjectCaseCopy> = {
 
 export function projectCaseFor(project: Pick<Project, 'name' | 'techStack'>): ProjectCaseCopy {
   const fallbackStack = splitTechStack(project.techStack)
-  return projectCaseCopy[project.name] || {
+  const copy = projectCaseCopy[project.name] || {
     focus: '工程作品',
     challenge: '围绕真实开发场景沉淀项目能力，并把功能、架构和维护性放在同一张图里考虑。',
     solution: '用清晰的模块边界、稳定的数据模型和可演进的接口组织实现。',
@@ -371,6 +424,7 @@ export function projectCaseFor(project: Pick<Project, 'name' | 'techStack'>): Pr
     architecture: fallbackStack.length ? fallbackStack : ['用户入口', '应用核心', '数据/外部系统'],
     dataFlow: ['输入请求', '应用层解析', '核心逻辑处理', '读写数据或调用外部服务', '返回结果'],
   }
+  return { ...copy, ...projectCaseEnhancements[project.name] }
 }
 
 export function emptyPost(): Post {
