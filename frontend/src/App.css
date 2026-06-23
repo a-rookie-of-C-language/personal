@@ -966,10 +966,10 @@
 
 .architecture-card {
   background:
-    linear-gradient(90deg, rgba(37, 99, 235, 0.08) 1px, transparent 1px),
-    linear-gradient(rgba(37, 99, 235, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(37, 99, 235, 0.06) 1px, transparent 1px),
+    linear-gradient(rgba(37, 99, 235, 0.06) 1px, transparent 1px),
     #ffffff;
-  background-size: 28px 28px;
+  background-size: 24px 24px;
   grid-column: 1 / -1;
 }
 
@@ -979,40 +979,47 @@
 
 .architecture-diagram {
   display: grid;
-  gap: 42px;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0;
 }
 
 .architecture-stage {
-  min-width: 0;
+  display: grid;
+  grid-template-columns: 112px minmax(0, 1fr);
   position: relative;
 }
 
 .architecture-layer {
   backdrop-filter: blur(10px);
-  background: rgba(248, 250, 252, 0.96);
-  border: 1px solid #bfdbfe;
+  background:
+    linear-gradient(90deg, rgba(239, 246, 255, 0.74), rgba(240, 253, 250, 0.64)),
+    rgba(248, 250, 252, 0.96);
+  border: 1px dashed #93c5fd;
   border-radius: 8px;
+  grid-column: 2;
   display: grid;
   gap: 14px;
-  min-height: 260px;
-  padding: 16px;
+  min-height: 132px;
+  padding: 18px;
   position: relative;
   z-index: 1;
 }
 
 .architecture-layer::before {
-  background: linear-gradient(180deg, #2563eb, #ec4899);
-  border-radius: 8px 0 0 8px;
+  background: rgba(219, 234, 254, 0.88);
+  border: 1px solid #bfdbfe;
+  border-radius: 8px;
+  color: #1d4ed8;
   content: "";
-  inset: 0 auto 0 0;
+  inset: 0 auto 0 -112px;
   position: absolute;
-  width: 4px;
+  width: 86px;
 }
 
 .architecture-layer header {
-  display: grid;
-  gap: 8px;
+  align-items: center;
+  display: flex;
+  gap: 10px;
+  min-height: 34px;
 }
 
 .architecture-layer header span {
@@ -1031,55 +1038,63 @@
   font-family: "Fira Code", monospace;
   font-size: 17px;
   line-height: 1.45;
+  position: absolute;
+  left: -96px;
+  text-align: center;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 54px;
+  z-index: 2;
 }
 
 .architecture-layer > div {
-  display: grid;
+  display: flex;
+  flex-wrap: wrap;
   gap: 10px;
 }
 
 .architecture-node {
-  background: #ffffff;
-  border: 1px solid #e4e4e7;
+  background: #dbeafe;
+  border: 1px solid #bfdbfe;
   border-radius: 8px;
-  color: #27272a;
+  color: #1f2937;
   font-size: 14px;
   font-weight: 800;
   line-height: 1.45;
-  padding: 10px 12px;
+  min-width: 136px;
+  padding: 10px 14px;
+  text-align: center;
 }
 
 .architecture-arrow {
   align-items: center;
-  background: #18181b;
-  border: 2px solid #ffffff;
-  border-radius: 8px;
-  color: #ffffff;
-  display: grid;
+  color: #2563eb;
+  display: flex;
   font-family: "Fira Code", monospace;
   font-weight: 800;
-  gap: 2px;
+  gap: 10px;
   justify-items: center;
-  min-height: 42px;
+  grid-column: 2;
   justify-content: center;
-  min-width: 88px;
-  padding: 6px 8px;
-  position: absolute;
-  right: -53px;
-  top: 50%;
-  transform: translateY(-50%);
+  min-height: 40px;
+  padding: 4px 0;
+  position: relative;
   z-index: 2;
 }
 
 .architecture-arrow > span {
-  font-size: 15px;
+  font-size: 18px;
   line-height: 1;
 }
 
 .architecture-arrow small {
-  color: #e4e4e7;
-  font-size: 10px;
+  background: #ffffff;
+  border: 1px solid #bfdbfe;
+  border-radius: 999px;
+  color: #2563eb;
+  font-size: 12px;
   line-height: 1.25;
+  padding: 6px 12px;
   text-align: center;
 }
 
@@ -1155,20 +1170,28 @@
     grid-template-columns: 1fr;
   }
 
+  .architecture-stage {
+    grid-template-columns: 1fr;
+  }
+
   .architecture-layer {
+    grid-column: 1;
     min-height: auto;
   }
 
-  .architecture-arrow {
-    bottom: -25px;
-    left: 50%;
-    right: auto;
-    top: auto;
-    transform: translateX(-50%) rotate(90deg);
+  .architecture-layer::before {
+    display: none;
   }
 
-  .architecture-arrow small {
-    display: none;
+  .architecture-layer header strong {
+    position: static;
+    text-align: left;
+    transform: none;
+    width: auto;
+  }
+
+  .architecture-arrow {
+    grid-column: 1;
   }
 }
 

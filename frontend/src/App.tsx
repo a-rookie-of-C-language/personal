@@ -614,7 +614,7 @@ function ProjectArchitecture({
             </section>
             {index < effectiveLayers.length - 1 && (
               <span className="architecture-arrow" aria-hidden="true">
-                <span>→</span>
+                <span>↕</span>
                 <small>{relations?.[index] || '依赖 / 调用'}</small>
               </span>
             )}
