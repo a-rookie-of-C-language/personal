@@ -544,7 +544,7 @@ function ProjectDetail() {
         </section>
       )}
       <section className="diagram-section">
-        <ProjectFlow title="架构图" items={copy.architecture || []} />
+        <ProjectArchitecture layers={copy.architectureLayers} fallbackItems={copy.architecture || []} />
         <ProjectFlow title="数据流转图" items={copy.dataFlow || []} />
       </section>
       {evidence.length > 0 && (
@@ -577,13 +577,45 @@ function ProjectList({ title, items }: { title: string; items: string[] }) {
   )
 }
 
-function ProjectFlow({ title, items }: { title: string; items: string[] }) {
-  const isArchitecture = title === '架构图'
+function ProjectArchitecture({
+  layers,
+  fallbackItems,
+}: {
+  layers?: { title: string; items: string[] }[]
+  fallbackItems: string[]
+}) {
+  const effectiveLayers = layers?.length
+    ? layers
+    : fallbackItems.map((item, index) => ({ title: `Layer ${index + 1}`, items: [item] }))
 
   return (
-    <article className={`flow-card ${isArchitecture ? 'architecture-card' : 'data-flow-card'}`}>
+    <article className="flow-card architecture-card">
+      <h2>架构图</h2>
+      <div className="architecture-diagram">
+        {effectiveLayers.map((layer, index) => (
+          <div className="architecture-stage" key={layer.title}>
+            <section className="architecture-layer">
+              <header>
+                <span>{String(index + 1).padStart(2, '0')}</span>
+                <strong>{layer.title}</strong>
+              </header>
+              <div>
+                {layer.items.map((item) => <span className="architecture-node" key={`${layer.title}-${item}`}>{item}</span>)}
+              </div>
+            </section>
+            {index < effectiveLayers.length - 1 && <span className="architecture-arrow" aria-hidden="true">→</span>}
+          </div>
+        ))}
+      </div>
+    </article>
+  )
+}
+
+function ProjectFlow({ title, items }: { title: string; items: string[] }) {
+  return (
+    <article className="flow-card data-flow-card">
       <h2>{title}</h2>
-      <div className={isArchitecture ? 'architecture-map' : 'flow-lane'}>
+      <div className="flow-lane">
         {items.map((item, index) => (
           <div className="flow-node" key={`${title}-${item}`}>
             <span>{String(index + 1).padStart(2, '0')}</span>

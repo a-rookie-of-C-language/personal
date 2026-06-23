@@ -262,7 +262,13 @@ export type ProjectCaseCopy = {
   details?: string[]
   decisions?: string[]
   architecture?: string[]
+  architectureLayers?: ProjectArchitectureLayer[]
   dataFlow?: string[]
+}
+
+export type ProjectArchitectureLayer = {
+  title: string
+  items: string[]
 }
 
 export const projectCaseEnhancements: Record<string, Pick<ProjectCaseCopy, 'highlights' | 'details' | 'decisions'>> = {
@@ -326,6 +332,81 @@ export const projectCaseEnhancements: Record<string, Pick<ProjectCaseCopy, 'high
     details: ['前端、后端 API 和 Agent 服务分离部署与联调。', '后端负责业务鉴权和编排，Agent 负责 RAG 索引与检索。', 'README 提供 auth/smoke 脚本验证聊天主链路。'],
     decisions: ['前端、业务后端、Agent 服务三段拆分，便于独立调试。', 'PostgreSQL/pgvector 存储知识索引，Agent 负责检索增强。', '内置 e2e drill 脚本验证认证、非流式和流式聊天链路。'],
   },
+}
+
+export const projectArchitectureLayers: Record<string, ProjectArchitectureLayer[]> = {
+  'Personal Blog Studio': [
+    { title: '访问入口', items: ['浏览器访问', 'GitHub Pages'] },
+    { title: '前端应用', items: ['React Router', '页面组件', '项目详情页'] },
+    { title: '静态内容', items: ['siteContent.ts', 'GitHub 活动 JSON', '头像与静态资源'] },
+    { title: '交付链路', items: ['Vite 构建', 'dist 静态产物', '自定义域名'] },
+  ],
+  'rust-spring': [
+    { title: '启动入口', items: ['Spring 风格启动器', '路由宏入口'] },
+    { title: '元编程层', items: ['过程宏', '注解语义解析'] },
+    { title: '容器层', items: ['组件注册表', 'IoC 容器', '配置加载器'] },
+    { title: '运行层', items: ['HTTP Server', 'Handler 分发', '请求响应'] },
+  ],
+  AIGateway: [
+    { title: '接入层', items: ['Axum HTTP', 'OpenAI 兼容 API', 'SSE 流式端点'] },
+    { title: '治理层', items: ['API Key', '租户隔离', '限流与配额'] },
+    { title: '应用层', items: ['聊天编排', 'Provider 路由', '请求归一'] },
+    { title: '外部服务', items: ['Provider 适配器', '模型服务', '流式响应'] },
+  ],
+  ferryllm: [
+    { title: '客户端层', items: ['GUI', 'CLI', 'IDE / Agent 客户端'] },
+    { title: '协议入口', items: ['OpenAI 兼容接口', 'Anthropic 桥接'] },
+    { title: '核心模型', items: ['共享 IR', '模型名映射', 'Tool Calling'] },
+    { title: 'Provider 层', items: ['本地 Gateway', '上游 Provider', '流式归一'] },
+  ],
+  cxxmcp: [
+    { title: 'SDK 入口', items: ['C++17 API', '示例 Client / Server'] },
+    { title: '协议模型', items: ['MCP Schema', 'JSON-RPC 对象'] },
+    { title: '传输边界', items: ['Transport', 'Session', '请求/通知处理'] },
+    { title: '质量约束', items: ['Conformance Evidence', 'CMake', 'Release Gates'] },
+  ],
+  WinuxCmd: [
+    { title: '终端入口', items: ['PowerShell', 'cmd', 'Windows Terminal'] },
+    { title: '命令分发', items: ['命令入口', '参数解析', 'stdin 读取'] },
+    { title: '工具能力', items: ['文件工具', '文本处理', '管道组合'] },
+    { title: '系统边界', items: ['Windows API', 'stdout / stderr', '下游命令'] },
+  ],
+  WinuxSH: [
+    { title: '交互层', items: ['Prompt', '历史记录', '命令补全'] },
+    { title: '语法层', items: ['命令解析器', '变量展开', '通配符'] },
+    { title: '执行层', items: ['内置命令', '外部命令', '运行时'] },
+    { title: '扩展层', items: ['主题系统', '插件架构', 'PATH 自动发现'] },
+  ],
+  rubash: [
+    { title: '入口层', items: ['CLI', '脚本 Runner', '交互输入'] },
+    { title: '解析层', items: ['Lexer', 'Parser', 'AST'] },
+    { title: '执行层', items: ['Executor', '重定向', 'Builtins'] },
+    { title: '兼容层', items: ['外部命令', '上游 Bash Tests', '退出码'] },
+  ],
+  'Agentic RAG Tool System': [
+    { title: 'Agent 入口', items: ['CLI', 'MCP', 'Controller'] },
+    { title: '工具契约', items: ['Tool Schema', '参数校验', 'Runtime 调度'] },
+    { title: '检索服务', items: ['RAG Service', 'DAO', '向量检索'] },
+    { title: '结果返回', items: ['知识片段', '结构化结果', 'Agent 消费'] },
+  ],
+  arookieofcOS: [
+    { title: '交互层', items: ['React 桌面 UI', '系统面板'] },
+    { title: '桥接层', items: ['Tauri IPC', 'Rust Commands'] },
+    { title: '能力模块', items: ['文件', '终端', '系统监控'] },
+    { title: '系统层', items: ['Windows OS', '本地资源', '系统命令'] },
+  ],
+  arookieofcMQ: [
+    { title: '接入 API', items: ['Producer API', 'Consumer API'] },
+    { title: 'Broker 模型', items: ['Topic', 'Queue', 'MessageQueue Trait'] },
+    { title: '存储层', items: ['FIFO 队列', '消息体', '持久化演进'] },
+    { title: '消费处理', items: ['Message Handler', '确认消费', '路线图约束'] },
+  ],
+  'Advisor AI Platform': [
+    { title: '前端入口', items: ['React UI', '登录认证', '聊天页面'] },
+    { title: '业务后端', items: ['Spring Boot API', '会话编排', '权限边界'] },
+    { title: 'Agent 服务', items: ['Python RAG', '索引构建', 'Retriever'] },
+    { title: '数据层', items: ['PostgreSQL', 'pgvector', '知识库'] },
+  ],
 }
 
 export const projectCaseCopy: Record<string, ProjectCaseCopy> = {
@@ -437,7 +518,11 @@ export function projectCaseFor(project: Pick<Project, 'name' | 'techStack'>): Pr
     architecture: fallbackStack.length ? fallbackStack : ['用户入口', '应用核心', '数据/外部系统'],
     dataFlow: ['输入请求', '应用层解析', '核心逻辑处理', '读写数据或调用外部服务', '返回结果'],
   }
-  return { ...copy, ...projectCaseEnhancements[project.name] }
+  return {
+    ...copy,
+    ...projectCaseEnhancements[project.name],
+    architectureLayers: projectArchitectureLayers[project.name] || copy.architectureLayers,
+  }
 }
 
 export function emptyPost(): Post {
