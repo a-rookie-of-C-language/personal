@@ -578,10 +578,12 @@ function ProjectList({ title, items }: { title: string; items: string[] }) {
 }
 
 function ProjectFlow({ title, items }: { title: string; items: string[] }) {
+  const isArchitecture = title === '架构图'
+
   return (
-    <article className="flow-card">
+    <article className={`flow-card ${isArchitecture ? 'architecture-card' : 'data-flow-card'}`}>
       <h2>{title}</h2>
-      <div className="flow-lane">
+      <div className={isArchitecture ? 'architecture-map' : 'flow-lane'}>
         {items.map((item, index) => (
           <div className="flow-node" key={`${title}-${item}`}>
             <span>{String(index + 1).padStart(2, '0')}</span>
