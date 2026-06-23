@@ -263,6 +263,7 @@ export type ProjectCaseCopy = {
   decisions?: string[]
   architecture?: string[]
   architectureLayers?: ProjectArchitectureLayer[]
+  architectureRelations?: string[]
   dataFlow?: string[]
 }
 
@@ -409,6 +410,21 @@ export const projectArchitectureLayers: Record<string, ProjectArchitectureLayer[
   ],
 }
 
+export const projectArchitectureRelations: Record<string, string[]> = {
+  'Personal Blog Studio': ['HTTP 访问', '组件读取静态数据', 'GitHub Actions / Vite 发布'],
+  'rust-spring': ['宏展开注册', '依赖注入', '路由分发'],
+  AIGateway: ['HTTP / SSE', '鉴权后进入应用编排', 'Provider API 调用'],
+  ferryllm: ['本地请求', '协议归一', 'Provider 调用 / 流式转发'],
+  cxxmcp: ['SDK 调用', 'JSON-RPC 消息', 'Transport / Conformance 校验'],
+  WinuxCmd: ['进程调用', '参数 / stdin 输入', 'stdout / stderr 输出'],
+  WinuxSH: ['用户输入', '解析与展开', '执行命令 / 加载扩展'],
+  rubash: ['命令输入', 'AST 交给执行器', '执行结果 / Upstream 测试校验'],
+  'Agentic RAG Tool System': ['Tool Call', 'Schema 校验后调度', '向量检索结果返回'],
+  arookieofcOS: ['UI 事件', 'Tauri IPC', '系统命令 / 本地资源访问'],
+  arookieofcMQ: ['生产 / 订阅请求', '队列路由', '消息处理与确认'],
+  'Advisor AI Platform': ['HTTP / Auth', 'Agent API 调用', 'pgvector 向量检索'],
+}
+
 export const projectCaseCopy: Record<string, ProjectCaseCopy> = {
   'Advisor AI Platform': {
     focus: '全栈智能顾问平台',
@@ -522,6 +538,7 @@ export function projectCaseFor(project: Pick<Project, 'name' | 'techStack'>): Pr
     ...copy,
     ...projectCaseEnhancements[project.name],
     architectureLayers: projectArchitectureLayers[project.name] || copy.architectureLayers,
+    architectureRelations: projectArchitectureRelations[project.name] || copy.architectureRelations,
   }
 }
 

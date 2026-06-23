@@ -544,7 +544,11 @@ function ProjectDetail() {
         </section>
       )}
       <section className="diagram-section">
-        <ProjectArchitecture layers={copy.architectureLayers} fallbackItems={copy.architecture || []} />
+        <ProjectArchitecture
+          layers={copy.architectureLayers}
+          relations={copy.architectureRelations}
+          fallbackItems={copy.architecture || []}
+        />
         <ProjectFlow title="数据流转图" items={copy.dataFlow || []} />
       </section>
       {evidence.length > 0 && (
@@ -579,9 +583,11 @@ function ProjectList({ title, items }: { title: string; items: string[] }) {
 
 function ProjectArchitecture({
   layers,
+  relations,
   fallbackItems,
 }: {
   layers?: { title: string; items: string[] }[]
+  relations?: string[]
   fallbackItems: string[]
 }) {
   const effectiveLayers = layers?.length
@@ -590,7 +596,10 @@ function ProjectArchitecture({
 
   return (
     <article className="flow-card architecture-card">
-      <h2>架构图</h2>
+      <div className="diagram-title-row">
+        <h2>架构图</h2>
+        <span>分层 / 边界 / 调用关系</span>
+      </div>
       <div className="architecture-diagram">
         {effectiveLayers.map((layer, index) => (
           <div className="architecture-stage" key={layer.title}>
@@ -603,7 +612,12 @@ function ProjectArchitecture({
                 {layer.items.map((item) => <span className="architecture-node" key={`${layer.title}-${item}`}>{item}</span>)}
               </div>
             </section>
-            {index < effectiveLayers.length - 1 && <span className="architecture-arrow" aria-hidden="true">→</span>}
+            {index < effectiveLayers.length - 1 && (
+              <span className="architecture-arrow" aria-hidden="true">
+                <span>→</span>
+                <small>{relations?.[index] || '依赖 / 调用'}</small>
+              </span>
+            )}
           </div>
         ))}
       </div>
