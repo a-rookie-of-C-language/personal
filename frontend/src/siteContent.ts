@@ -200,6 +200,15 @@ export const curatedProjects: Project[] = [
     techStack: 'React, Spring Boot, Python, RAG, PostgreSQL, pgvector',
     featured: true,
   },
+  {
+    id: 13,
+    name: 'arookieofcDB',
+    description: 'Rust 迷你 KV 数据库引擎，围绕 WAL、B+Tree、Checkpoint、命令执行和轻量 IoC 容器拆解数据库核心机制。',
+    url: '',
+    repoUrl: 'https://github.com/a-rookie-of-C-language/arookieofcDB',
+    techStack: 'Rust, KV Store, WAL, B+Tree, Checkpoint, IoC',
+    featured: true,
+  },
 ]
 
 export const projectEvidence: Record<string, { label: string; url: string }[]> = {
@@ -240,6 +249,9 @@ export const projectEvidence: Record<string, { label: string; url: string }[]> =
   ],
   'Advisor AI Platform': [
     { label: 'GitHub repository', url: 'https://github.com/ai-cqut/advisor-ai-platform' },
+  ],
+  arookieofcDB: [
+    { label: 'GitHub repository', url: 'https://github.com/a-rookie-of-C-language/arookieofcDB' },
   ],
 }
 
@@ -335,6 +347,11 @@ export const projectCaseEnhancements: Record<string, Pick<ProjectCaseCopy, 'high
     details: ['backend Maven modules 包含 common-core、gateway、chat-service、auth-service、rag-service、memory-service、audit-service、risk-control-service、student-service、teacher-service、check-in-service、feedback-service。', 'docs/architecture.md 明确 frontend -> gateway -> Java 微服务 -> agent -> ai-gateway/LLM/RAG/Memory 的职责边界。', 'README 提供 chat_e2e_drill、memory_e2e_drill、run_memory_jmeter、push_nacos_common_config 等脚本验证链路。'],
     decisions: ['前端只访问统一 /api，由 gateway 做路由转发、JWT 协同、风控前置、trace 和指标暴露。', '业务微服务负责数据与流程，Python agent 只承担 AI 编排、RAG 检索、工具调用、记忆上下文和安全过滤。', '把 ai-gateway 定位为模型供应商治理网关，与业务 gateway 分离，避免职责混淆。'],
   },
+  arookieofcDB: {
+    highlights: ['Rust 2024 KV 引擎', 'WAL 追加日志', 'B+Tree 索引持久化', 'Checkpoint 恢复', 'inventory 编译期 IoC'],
+    details: ['DbEngine 使用 Arc<RwLock<BPlusTree>> 保存索引，用 Mutex<WalManager> 串行化 WAL 写入。', 'WalManager 自管 000001.wal 文件、固定 header、变长 LogEntry、CRC32、64KB buffer、文件滚动和 sequence 恢复。', '命令层包含 set/get/delete builtins，执行流程按 register_args -> parse -> execute 拆分。'],
+    decisions: ['WAL 选择追加文件和实时 fsync，第一阶段以一致性和学习价值优先。', 'Checkpoint 采用和 WAL 协同的恢复链路，启动时先加载 checkpoint 再 replay 更高 sequence 的日志。', 'IoC 从 rust-spring 最小迁移，使用 inventory + 全局 ApplicationContext 支撑组件注册。'],
+  },
 }
 
 export const projectArchitectureLayers: Record<string, ProjectArchitectureLayer[]> = {
@@ -423,6 +440,14 @@ export const projectArchitectureLayers: Record<string, ProjectArchitectureLayer[
     { title: '模型治理层', items: ['backend/ai-gateway', 'OpenAI-compatible provider', 'model routing', 'rate limit', 'token usage audit'] },
     { title: '基础设施层', items: ['PostgreSQL + pgvector', 'Redis', 'Kafka', 'Nacos', 'Jaeger', 'Prometheus / Grafana', 'Ollama bge-m3'] },
   ],
+  arookieofcDB: [
+    { title: '交互与命令层', items: ['main.rs', 'Cli::run', 'set/get/delete builtins', 'CommandExecutor'] },
+    { title: '轻量 IoC 层', items: ['Application::run', 'ApplicationContext', 'DefaultListableBeanFactory', 'inventory registry', 'macros crate'] },
+    { title: '数据库引擎层', items: ['DbEngine', 'set/get/delete', 'Arc<RwLock<BPlusTree>>', 'Mutex<WalManager>', 'SharedDbEngine'] },
+    { title: '索引与存储层', items: ['BPlusTree', 'leaf/internal nodes', 'data.bpt', 'sync/load_from_disk', 'iter/contains/len'] },
+    { title: 'WAL 与恢复层', items: ['WalManager', 'WalHeader', 'LogEntry', 'CRC32', 'file roll', '64KB buffer', 'WalReader replay'] },
+    { title: '一致性控制层', items: ['CheckpointManager', 'checkpoint sequence', 'cleanup_old_files', 'recover_from_wal', 'trade-off: consistency first'] },
+  ],
 }
 
 export const projectArchitectureRelations: Record<string, string[]> = {
@@ -438,6 +463,7 @@ export const projectArchitectureRelations: Record<string, string[]> = {
   arookieofcOS: ['源码状态约束展示口径', 'UI 事件触发 invoke', 'IPC 调用 Rust handler', 'handler 访问系统资源'],
   arookieofcMQ: ['示例调用 API', 'API 创建消息对象', '消息进入队列实现', '生产消费线程协作并按阶段演进'],
   'Advisor AI Platform': ['前端统一访问 /api', 'gateway 路由并风控', '微服务调用 agent / 内部 API', 'Agent 调用 RAG/Tools/Memory', '模型治理与基础设施支撑'],
+  arookieofcDB: ['CLI 解析命令', 'IoC 初始化组件', '引擎先写 WAL 再改索引', 'B+Tree 持久化数据页', 'WAL replay 与 checkpoint 恢复'],
 }
 
 export const projectCaseCopy: Record<string, ProjectCaseCopy> = {
@@ -538,6 +564,14 @@ export const projectCaseCopy: Record<string, ProjectCaseCopy> = {
     impact: '减少运行时依赖，让站点更容易上线、迁移和长期维护。',
     architecture: ['React 页面路由', '静态内容数据', 'Markdown 渲染', 'Vite 构建', '静态文件托管'],
     dataFlow: ['维护 siteContent.ts', '执行前端构建', '生成 dist 静态资源', '静态服务托管', '浏览器加载页面'],
+  },
+  arookieofcDB: {
+    focus: 'Rust KV 数据库引擎',
+    challenge: '数据库核心不只是内存 Map，还要处理写前日志、崩溃恢复、索引持久化、命令执行和一致性取舍。',
+    solution: '用 Rust 实现 DbEngine，写入时先追加 WAL 再更新 B+Tree，启动时通过 checkpoint 与 WalReader replay 恢复状态，并用命令层暴露 set/get/delete。',
+    impact: '展示对存储引擎、WAL、B+Tree、恢复流程和 Rust 并发边界的底层理解。',
+    architecture: ['CLI / Commands', 'IoC ApplicationContext', 'DbEngine', 'B+Tree Storage', 'WAL / Checkpoint'],
+    dataFlow: ['CLI 输入 set/get/delete', '命令解析并调用 DbEngine', '写请求追加 LogEntry 并 fsync', '更新 B+Tree 索引并可 sync 到 data.bpt', '启动时加载 checkpoint 并 replay WAL'],
   },
 }
 
