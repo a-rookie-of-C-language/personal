@@ -374,9 +374,16 @@
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
+.award-grid {
+  display: grid;
+  gap: 18px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
 .post-card,
 .project-card,
 .organization-card,
+.award-card,
 .editor-panel,
 .login-panel,
 .empty-state {
@@ -408,9 +415,62 @@
 
 .post-card div,
 .project-card,
+.award-card div,
 .editor-panel,
 .login-panel {
   padding: 20px;
+}
+
+.award-card {
+  overflow: hidden;
+}
+
+.award-image-link {
+  background: #f4f4f5;
+  border-bottom: 1px solid #e4e4e7;
+  display: block;
+  overflow: hidden;
+}
+
+.award-image-link img {
+  aspect-ratio: 16 / 10;
+  display: block;
+  height: 100%;
+  object-fit: contain;
+  transition: transform 180ms ease;
+  width: 100%;
+}
+
+.award-card:hover .award-image-link img {
+  transform: scale(1.015);
+}
+
+.award-card span {
+  color: #ec4899;
+  display: block;
+  font-family: "Fira Code", monospace;
+  font-size: 13px;
+  font-weight: 800;
+  margin-bottom: 10px;
+}
+
+.award-card h3 {
+  color: #09090b;
+  font-family: "Fira Code", monospace;
+  font-size: 19px;
+  line-height: 1.35;
+  margin: 0 0 10px;
+}
+
+.award-card p {
+  color: #52525b;
+  line-height: 1.65;
+  margin: 0 0 12px;
+}
+
+.award-card small {
+  color: #71717a;
+  font-weight: 700;
 }
 
 .post-index {
@@ -801,7 +861,8 @@
 .resume-skill-grid,
 .timeline-list,
 .case-grid,
-.project-insight-grid {
+.project-insight-grid,
+.resume-award-list {
   display: grid;
   gap: 16px;
 }
@@ -836,6 +897,57 @@
 
 .timeline-list {
   grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.resume-award-list {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.resume-award-item {
+  align-items: center;
+  background: rgba(255, 255, 255, 0.94);
+  border: 1px solid #e4e4e7;
+  border-radius: 8px;
+  color: #09090b;
+  display: grid;
+  gap: 16px;
+  grid-template-columns: 120px minmax(0, 1fr);
+  padding: 14px;
+  text-decoration: none;
+  transition: border-color 180ms ease, box-shadow 180ms ease, transform 180ms ease;
+}
+
+.resume-award-item:hover,
+.resume-award-item:focus-visible {
+  border-color: #bfdbfe;
+  box-shadow: 0 18px 40px rgba(37, 99, 235, 0.1);
+  outline: 2px solid transparent;
+  transform: translateY(-2px);
+}
+
+.resume-award-item img {
+  aspect-ratio: 4 / 3;
+  background: #f4f4f5;
+  border: 1px solid #e4e4e7;
+  border-radius: 6px;
+  object-fit: cover;
+  width: 100%;
+}
+
+.resume-award-item span {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+}
+
+.resume-award-item strong {
+  font-family: "Fira Code", monospace;
+  line-height: 1.35;
+}
+
+.resume-award-item small {
+  color: #52525b;
+  line-height: 1.5;
 }
 
 .timeline-list span,
@@ -1597,7 +1709,9 @@ button,
   .admin-shell,
   .admin-grid,
   .post-grid,
-  .project-grid {
+  .project-grid,
+  .organization-grid,
+  .award-grid {
     grid-template-columns: 1fr;
   }
 
@@ -1654,6 +1768,7 @@ button,
   .resume-hero,
   .resume-skill-grid,
   .timeline-list,
+  .resume-award-list,
   .case-grid,
   .project-insight-grid,
   .deployment-panel,
@@ -1687,6 +1802,15 @@ button,
 
   .topbar nav a {
     padding: 8px;
+  }
+
+  .resume-award-item {
+    grid-template-columns: 1fr;
+  }
+
+  .resume-award-item img {
+    aspect-ratio: 16 / 10;
+    object-fit: contain;
   }
 
   .brand {

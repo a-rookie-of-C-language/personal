@@ -14,6 +14,7 @@ import {
 import { MarkdownContent } from './MarkdownContent'
 import {
   GITHUB_URL,
+  awardCertificates,
   deploymentNotes,
   emptyProfile,
   focusCards,
@@ -249,6 +250,8 @@ function Home() {
 
       <GitHubActivity />
 
+      <AwardCertificates />
+
       <section className="content-band">
         <div className="section-head">
           <div>
@@ -287,6 +290,34 @@ function Home() {
         </div>
       </section>
     </main>
+  )
+}
+
+function AwardCertificates() {
+  return (
+    <section className="content-band awards-band">
+      <div className="section-head">
+        <div>
+          <p className="eyebrow">Awards</p>
+          <h2>获奖证书</h2>
+        </div>
+      </div>
+      <div className="award-grid">
+        {awardCertificates.map((award) => (
+          <article className="award-card" key={award.imageUrl}>
+            <a className="award-image-link" href={award.imageUrl} target="_blank" aria-label={`查看 ${award.title}`}>
+              <img src={award.imageUrl} alt={award.title} />
+            </a>
+            <div>
+              <span>{award.date}</span>
+              <h3>{award.title}</h3>
+              <p>{award.subtitle}</p>
+              <small>{award.issuer}</small>
+            </div>
+          </article>
+        ))}
+      </div>
+    </section>
   )
 }
 
@@ -437,6 +468,26 @@ function ResumePage() {
               <h3>{group.title}</h3>
               <div className="tag-row">{group.items.map((item) => <span key={item}>{item}</span>)}</div>
             </article>
+          ))}
+        </div>
+      </section>
+
+      <section className="resume-section">
+        <div className="section-head">
+          <div>
+            <p className="eyebrow">荣誉证明</p>
+            <h2>竞赛与项目材料</h2>
+          </div>
+        </div>
+        <div className="resume-award-list">
+          {awardCertificates.map((award) => (
+            <a className="resume-award-item" href={award.imageUrl} target="_blank" key={award.imageUrl}>
+              <img src={award.imageUrl} alt="" />
+              <span>
+                <strong>{award.title}</strong>
+                <small>{award.subtitle} · {award.issuer} · {award.date}</small>
+              </span>
+            </a>
           ))}
         </div>
       </section>

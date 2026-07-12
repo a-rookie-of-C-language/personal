@@ -91,6 +91,25 @@ export const deploymentNotes = [
   '不再依赖后端服务、数据库、JWT 或 API 反向代理。',
 ]
 
+export const awardCertificates = [
+  {
+    title: '第十五届蓝桥杯全国总决赛优秀奖',
+    subtitle: 'Java 软件开发大学 B 组',
+    issuer: '工业和信息化部人才交流中心 / 蓝桥杯大赛组委会',
+    date: '2024-06-02',
+    imageUrl: '/award-bluebridge-2024.jpg',
+    description: '荣获第十五届蓝桥杯全国软件和信息技术专业人才大赛全国总决赛 Java 软件开发大学 B 组优秀奖。',
+  },
+  {
+    title: '第二十七届中国机器人及人工智能大赛全国总决赛一等奖',
+    subtitle: '机器人任务挑战赛（自主巡航）',
+    issuer: '中国机器人及人工智能大赛组委会',
+    date: '2025-08',
+    imageUrl: '/award-craic-2025.png',
+    description: '重庆理工大学代表队在全国总决赛中表现优异，荣获一等奖。',
+  },
+]
+
 export const curatedProjects: Project[] = [
   {
     id: 1,
