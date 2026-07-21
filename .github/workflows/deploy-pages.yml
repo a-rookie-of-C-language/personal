@@ -39,6 +39,9 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Generate posts manifest
+        run: npm run posts:manifest
+
       - name: Build
         run: npm run build
 

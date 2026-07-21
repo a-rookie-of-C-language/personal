@@ -35,6 +35,7 @@ export type Post = {
   summary: string
   cover_url: string
   content: string
+  content_path?: string
   status: 'draft' | 'published'
   featured: boolean
   category_id?: number | null

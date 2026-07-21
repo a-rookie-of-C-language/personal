@@ -116,7 +116,7 @@ function BrandAvatar() {
 
 function Home() {
   const site = staticSite
-  const posts = staticPosts
+  const { posts } = usePostIndex()
   const profile = site.profile || emptyProfile
   const featuredPosts = posts.slice(0, 3)
   const projects = site.projects
@@ -709,17 +709,18 @@ function ProjectFlow({ title, items }: { title: string; items: string[] }) {
 }
 
 function BlogList() {
+  const { posts: indexedPosts } = usePostIndex()
   const [search, setSearch] = useState('')
   const deferredSearch = useDeferredValue(search)
 
   const posts = useMemo(() => {
     const keyword = deferredSearch.trim().toLowerCase()
-    if (!keyword) return staticPosts
-    return staticPosts.filter((post) => {
+    if (!keyword) return indexedPosts
+    return indexedPosts.filter((post) => {
       const haystack = `${post.title} ${post.summary} ${post.content}`.toLowerCase()
       return haystack.includes(keyword)
     })
-  }, [deferredSearch])
+  }, [deferredSearch, indexedPosts])
 
   return (
     <main id="main" className="page">
@@ -743,9 +744,47 @@ function BlogList() {
 
 function PostDetail() {
   const { slug } = useParams()
-  const post = staticPosts.find((item) => item.slug === slug) || null
+  const { posts, loaded } = usePostIndex()
+  const post = posts.find((item) => item.slug === slug) || null
+  const [remoteContent, setRemoteContent] = useState('')
+  const [loadError, setLoadError] = useState('')
 
+  useEffect(() => {
+    if (!post?.content_path) {
+      setRemoteContent('')
+      setLoadError('')
+      return
+    }
+
+    let ignore = false
+
+    fetch(post.content_path)
+      .then((response) => {
+        if (!response.ok) throw new Error(`HTTP ${response.status}`)
+        return response.text()
+      })
+      .then((text) => {
+        if (!ignore) {
+          setRemoteContent(stripArticleShell(text))
+          setLoadError('')
+        }
+      })
+      .catch(() => {
+        if (!ignore) {
+          setRemoteContent('')
+          setLoadError('正文加载失败，请稍后再试。')
+        }
+      })
+
+    return () => {
+      ignore = true
+    }
+  }, [post])
+
+  if (!post && !loaded) return <main id="main" className="page"><EmptyState text="文章加载中。" /></main>
   if (!post) return <main id="main" className="page"><EmptyState text="这篇文章不存在或尚未发布。" /></main>
+
+  const content = remoteContent || post.content
 
   return (
     <main id="main" className="article-page">
@@ -756,10 +795,47 @@ function PostDetail() {
         <h1>{post.title}</h1>
         <p className="summary">{post.summary}</p>
         <div className="tag-row">{post.tags.map((tag) => <span key={tag.id}>{tag.name}</span>)}</div>
-        <MarkdownContent value={post.content} />
+        {loadError ? <EmptyState text={loadError} /> : <MarkdownContent value={content} basePath={post.content_path} />}
       </article>
     </main>
   )
+}
+
+function stripArticleShell(value: string) {
+  return value
+    .replace(/^---[\s\S]*?---\s*/, '')
+    .replace(/^# .*(\r?\n)+/, '')
+    .trim()
+}
+
+function usePostIndex() {
+  const [posts, setPosts] = useState<Post[]>(staticPosts)
+  const [loaded, setLoaded] = useState(staticPosts.length > 0)
+
+  useEffect(() => {
+    let ignore = false
+
+    fetch('/posts/posts-manifest.json')
+      .then((response) => {
+        if (!response.ok) throw new Error(`HTTP ${response.status}`)
+        return response.json() as Promise<Post[]>
+      })
+      .then((items) => {
+        if (!ignore) {
+          setPosts(items)
+          setLoaded(true)
+        }
+      })
+      .catch(() => {
+        if (!ignore) setLoaded(true)
+      })
+
+    return () => {
+      ignore = true
+    }
+  }, [])
+
+  return { posts, loaded }
 }
 
 function PostCard({ post, index }: { post: Post; index: number }) {
