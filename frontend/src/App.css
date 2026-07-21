@@ -367,6 +367,7 @@
 }
 
 .post-grid,
+.category-grid,
 .project-grid,
 .organization-grid {
   display: grid;
@@ -381,6 +382,7 @@
 }
 
 .post-card,
+.category-card,
 .project-card,
 .organization-card,
 .award-card,
@@ -407,6 +409,22 @@
   transform: translateY(-2px);
 }
 
+.category-card {
+  color: inherit;
+  min-height: 220px;
+  overflow: hidden;
+  padding-top: 44px;
+  position: relative;
+  text-decoration: none;
+  transition: border-color 180ms ease, box-shadow 180ms ease, transform 180ms ease;
+}
+
+.category-card:hover {
+  border-color: #bfdbfe;
+  box-shadow: 0 22px 48px rgba(37, 99, 235, 0.11);
+  transform: translateY(-2px);
+}
+
 .post-card img {
   aspect-ratio: 16 / 8;
   display: block;
@@ -414,6 +432,7 @@
 }
 
 .post-card div,
+.category-card div,
 .project-card,
 .award-card div,
 .editor-panel,
@@ -492,6 +511,7 @@
 }
 
 .post-card h3,
+.category-card h3,
 .project-card h3 {
   font-family: "Fira Code", monospace;
   font-size: 20px;
@@ -504,11 +524,31 @@
   text-decoration: none;
 }
 
+.category-card h3 {
+  color: #09090b;
+}
+
 .post-card p,
+.category-card li,
 .project-card p {
   color: #52525b;
   line-height: 1.65;
   margin: 0 0 16px;
+}
+
+.category-card ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.category-card li {
+  border-top: 1px solid #f4f4f5;
+  margin: 0;
+  overflow: hidden;
+  padding: 8px 0 0;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .tag-row span,
@@ -1671,6 +1711,10 @@ button,
   .post-card:hover {
     transform: none;
   }
+
+  .category-card:hover {
+    transform: none;
+  }
 }
 
 @media print {
@@ -1709,6 +1753,7 @@ button,
   .admin-shell,
   .admin-grid,
   .post-grid,
+  .category-grid,
   .project-grid,
   .organization-grid,
   .award-grid {

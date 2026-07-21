@@ -78,9 +78,10 @@ function App() {
         <Route path="/" element={<PublicLayout />}>
           <Route index element={<Home />} />
           <Route path="resume" element={<ResumePage />} />
-        <Route path="projects/:slug" element={<ProjectDetail />} />
-        <Route path="blog" element={<BlogList />} />
-        <Route path="blog/:slug" element={<PostDetail />} />
+          <Route path="projects/:slug" element={<ProjectDetail />} />
+          <Route path="blog" element={<BlogList />} />
+          <Route path="blog/category/:categorySlug" element={<BlogCategoryPage />} />
+          <Route path="blog/:slug" element={<PostDetail />} />
       </Route>
     </Routes>
   </BrowserRouter>
@@ -709,36 +710,107 @@ function ProjectFlow({ title, items }: { title: string; items: string[] }) {
 }
 
 function BlogList() {
-  const { posts: indexedPosts } = usePostIndex()
-  const [search, setSearch] = useState('')
-  const deferredSearch = useDeferredValue(search)
-
-  const posts = useMemo(() => {
-    const keyword = deferredSearch.trim().toLowerCase()
-    if (!keyword) return indexedPosts
-    return indexedPosts.filter((post) => {
-      const haystack = `${post.title} ${post.summary} ${post.content}`.toLowerCase()
-      return haystack.includes(keyword)
-    })
-  }, [deferredSearch, indexedPosts])
+  const { posts } = usePostIndex()
+  const groups = useMemo(() => groupPostsByCategory(posts), [posts])
 
   return (
     <main id="main" className="page">
       <div className="page-title">
         <div>
           <p className="eyebrow">归档</p>
-          <h1>文章</h1>
+          <h1>文章板块</h1>
+        </div>
+      </div>
+      <div className="category-grid">
+        {groups.map((group, index) => <CategoryCard key={group.slug} group={group} index={index + 1} />)}
+        {groups.length === 0 && <EmptyState text="文章加载中。" />}
+      </div>
+    </main>
+  )
+}
+
+function BlogCategoryPage() {
+  const { categorySlug } = useParams()
+  const { posts: indexedPosts, loaded } = usePostIndex()
+  const [search, setSearch] = useState('')
+  const deferredSearch = useDeferredValue(search)
+  const group = useMemo(
+    () => groupPostsByCategory(indexedPosts).find((item) => item.slug === categorySlug) || null,
+    [categorySlug, indexedPosts],
+  )
+
+  const posts = useMemo(() => {
+    const keyword = deferredSearch.trim().toLowerCase()
+    const categoryPosts = group?.posts || []
+    if (!keyword) return categoryPosts
+    return categoryPosts.filter((post) => {
+      const haystack = `${post.title} ${post.summary} ${post.content}`.toLowerCase()
+      return haystack.includes(keyword)
+    })
+  }, [deferredSearch, group])
+
+  if (!group && !loaded) return <main id="main" className="page"><EmptyState text="文章加载中。" /></main>
+  if (!group) return <main id="main" className="page"><EmptyState text="这个文章板块不存在。" /></main>
+
+  return (
+    <main id="main" className="page">
+      <div className="page-title">
+        <div>
+          <p className="eyebrow">文章板块</p>
+          <h1>{group.name}</h1>
         </div>
         <label className="search-box">
           <Search size={18} />
-          <input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="搜索标题、摘要或正文" />
+          <input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="搜索这个板块" />
         </label>
       </div>
+      <Link to="/blog" className="back-link"><ArrowLeft size={18} /> 返回文章板块</Link>
       <div className="post-grid">
         {posts.map((post, index) => <PostCard key={post.id} post={post} index={index + 1} />)}
         {posts.length === 0 && <EmptyState text="没有匹配的文章。" />}
       </div>
     </main>
+  )
+}
+
+type PostCategoryGroup = {
+  slug: string
+  name: string
+  posts: Post[]
+}
+
+function groupPostsByCategory(posts: Post[]): PostCategoryGroup[] {
+  const groups = new Map<string, PostCategoryGroup>()
+
+  for (const post of posts) {
+    const slug = post.category?.slug || 'uncategorized'
+    const name = post.category?.name || '未分类'
+    const current = groups.get(slug)
+
+    if (current) {
+      current.posts.push(post)
+    } else {
+      groups.set(slug, { slug, name, posts: [post] })
+    }
+  }
+
+  return [...groups.values()].sort((a, b) => a.name.localeCompare(b.name, 'zh-CN'))
+}
+
+function CategoryCard({ group, index }: { group: PostCategoryGroup; index: number }) {
+  const latest = group.posts.slice(0, 3)
+
+  return (
+    <Link className="category-card" to={`/blog/category/${group.slug}`}>
+      <span className="post-index">{String(index).padStart(2, '0')}</span>
+      <div>
+        <p className="eyebrow">{group.posts.length} 篇文章</p>
+        <h3>{group.name}</h3>
+        <ul>
+          {latest.map((post) => <li key={post.id}>{post.title}</li>)}
+        </ul>
+      </div>
+    </Link>
   )
 }
 
