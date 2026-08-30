@@ -513,58 +513,6 @@
     "updated_at": "2026-07-21"
   },
   {
-    "id": 20,
-    "title": "分布式一致性：从 DB 与 MQ 到 Paxos、Raft 与 CAP",
-    "slug": "distributed-consistency",
-    "summary": "分布式一致性：从 DB 与 MQ 到 Paxos、Raft 与 CAP",
-    "cover_url": "",
-    "content": "",
-    "content_path": "/posts/distributed/%E5%88%86%E5%B8%83%E5%BC%8F%E4%B8%80%E8%87%B4%E6%80%A7/index.md",
-    "status": "draft",
-    "featured": false,
-    "category_id": 20,
-    "category": {
-      "id": 20,
-      "name": "分布式系统",
-      "slug": "distributed"
-    },
-    "tags": [
-      {
-        "id": 1901,
-        "name": "分布式系统",
-        "slug": "tag-19-0-1cui7xy"
-      },
-      {
-        "id": 1902,
-        "name": "数据一致性",
-        "slug": "tag-19-1-1ic7zzp"
-      },
-      {
-        "id": 1903,
-        "name": "分布式事务",
-        "slug": "tag-19-2-1cua2ug"
-      },
-      {
-        "id": 1904,
-        "name": "RocketMQ",
-        "slug": "rocketmq"
-      },
-      {
-        "id": 1905,
-        "name": "Raft",
-        "slug": "raft"
-      },
-      {
-        "id": 1906,
-        "name": "Paxos",
-        "slug": "paxos"
-      }
-    ],
-    "published_at": "2026-07-21",
-    "created_at": "2026-07-21",
-    "updated_at": "2026-07-21"
-  },
-  {
     "id": 21,
     "title": "前端学习笔记-----第一天",
     "slug": "frontend-05",

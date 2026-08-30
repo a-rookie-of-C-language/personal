@@ -145,7 +145,7 @@ const posts = indexFiles.map((file, index) => {
     created_at: date,
     updated_at: date,
   }
-})
+}).filter((post) => post.status === 'published')
 
 fs.writeFileSync(outputPath, `${JSON.stringify(posts, null, 2)}\n`)
 console.log(`Generated ${path.relative(process.cwd(), outputPath)} with ${posts.length} posts.`)

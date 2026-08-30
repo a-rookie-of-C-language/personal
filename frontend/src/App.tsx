@@ -818,44 +818,40 @@ function PostDetail() {
   const { slug } = useParams()
   const { posts, loaded } = usePostIndex()
   const post = posts.find((item) => item.slug === slug) || null
-  const [remoteContent, setRemoteContent] = useState('')
-  const [loadError, setLoadError] = useState('')
+  const [remoteState, setRemoteState] = useState({ path: '', content: '', error: '' })
 
   useEffect(() => {
-    if (!post?.content_path) {
-      setRemoteContent('')
-      setLoadError('')
-      return
-    }
+    const contentPath = post?.content_path
+    if (!contentPath) return
 
     let ignore = false
 
-    fetch(post.content_path)
+    fetch(contentPath)
       .then((response) => {
         if (!response.ok) throw new Error(`HTTP ${response.status}`)
         return response.text()
       })
       .then((text) => {
         if (!ignore) {
-          setRemoteContent(stripArticleShell(text))
-          setLoadError('')
+          setRemoteState({ path: contentPath, content: stripArticleShell(text), error: '' })
         }
       })
       .catch(() => {
         if (!ignore) {
-          setRemoteContent('')
-          setLoadError('正文加载失败，请稍后再试。')
+          setRemoteState({ path: contentPath, content: '', error: '正文加载失败，请稍后再试。' })
         }
       })
 
     return () => {
       ignore = true
     }
-  }, [post])
+  }, [post?.content_path])
 
   if (!post && !loaded) return <main id="main" className="page"><EmptyState text="文章加载中。" /></main>
   if (!post) return <main id="main" className="page"><EmptyState text="这篇文章不存在或尚未发布。" /></main>
 
+  const remoteContent = post.content_path === remoteState.path ? remoteState.content : ''
+  const loadError = post.content_path === remoteState.path ? remoteState.error : ''
   const content = remoteContent || post.content
 
   return (
@@ -887,7 +883,7 @@ function usePostIndex() {
   useEffect(() => {
     let ignore = false
 
-    fetch('/posts/posts-manifest.json')
+    fetch(`${import.meta.env.BASE_URL}posts/posts-manifest.json`)
       .then((response) => {
         if (!response.ok) throw new Error(`HTTP ${response.status}`)
         return response.json() as Promise<Post[]>
