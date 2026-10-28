@@ -2,6 +2,10 @@
 
 个人主页 + 作品集 + 静态博客页面。首页定位围绕 `a-rookie-of-C-language`：全栈工程、AI Agent、Java Spring、Rust、TypeScript、C++。
 
+[![star · owner/admin](https://img.shields.io/github/stars/a-rookie-of-C-language?affiliations=OWNER&label=star%20%C2%B7%20owner%2Fadmin&color=fe7d37)](https://github.com/a-rookie-of-C-language)
+[![star · collaborator](https://img.shields.io/github/stars/a-rookie-of-C-language?affiliations=COLLABORATOR&label=star%20%C2%B7%20collaborator&color=a371f7)](https://github.com/a-rookie-of-C-language)
+[![followers](https://img.shields.io/github/followers/a-rookie-of-C-language?style=flat&label=followers)](https://github.com/a-rookie-of-C-language)
+
 ## 技术栈
 
 - 前端：React + TypeScript + Vite
